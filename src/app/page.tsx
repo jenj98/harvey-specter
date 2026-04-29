@@ -1,65 +1,93 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-black">
+      {/* Animated background gradient orbs */}
+      <div className="absolute inset-0">
+        <div className="orb orb-1" />
+        <div className="orb orb-2" />
+        <div className="orb orb-3" />
+      </div>
+
+      {/* Noise texture overlay */}
+      <div className="absolute inset-0 opacity-[0.03] noise" />
+
+      {/* Thin horizontal rule */}
+      <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      {/* Main content */}
+      <div className="relative z-10 flex flex-col items-center gap-6 select-none">
+        <p className="text-xs uppercase tracking-[0.4em] text-white/30 font-light">
+          Suits · New York
+        </p>
+
+        <h1 className="name-text text-center font-bold uppercase tracking-tight text-white">
+          Harvey
+          <br />
+          <span className="text-outline">Specter</span>
+        </h1>
+
+        <p className="text-sm text-white/25 tracking-[0.2em] uppercase font-light">
+          The best closer in New York City
+        </p>
+      </div>
+
+      <style>{`
+        .orb {
+          position: absolute;
+          border-radius: 9999px;
+          filter: blur(120px);
+          opacity: 0.15;
+          animation: drift 12s ease-in-out infinite alternate;
+        }
+        .orb-1 {
+          width: 600px; height: 600px;
+          background: radial-gradient(circle, #b8860b, transparent);
+          top: -10%; left: -10%;
+          animation-duration: 14s;
+        }
+        .orb-2 {
+          width: 500px; height: 500px;
+          background: radial-gradient(circle, #4a3800, transparent);
+          bottom: -10%; right: -5%;
+          animation-duration: 10s;
+          animation-delay: -4s;
+        }
+        .orb-3 {
+          width: 350px; height: 350px;
+          background: radial-gradient(circle, #6b5200, transparent);
+          top: 40%; left: 55%;
+          animation-duration: 16s;
+          animation-delay: -8s;
+        }
+        @keyframes drift {
+          from { transform: translate(0, 0) scale(1); }
+          to   { transform: translate(40px, 30px) scale(1.1); }
+        }
+        .name-text {
+          font-size: clamp(4rem, 14vw, 11rem);
+          line-height: 0.9;
+          letter-spacing: -0.03em;
+          background: linear-gradient(135deg, #fff 30%, #b8860b 60%, #fff 90%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmer 5s linear infinite;
+        }
+        .text-outline {
+          -webkit-text-fill-color: transparent;
+          -webkit-text-stroke: 1px rgba(184,134,11,0.6);
+          background: none;
+        }
+        @keyframes shimmer {
+          from { background-position: 0% center; }
+          to   { background-position: 200% center; }
+        }
+        .noise {
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+          background-size: 200px 200px;
+        }
+      `}</style>
     </div>
   );
 }
