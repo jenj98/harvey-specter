@@ -41,20 +41,20 @@ export default function Home() {
         }
         .orb-1 {
           width: 600px; height: 600px;
-          background: radial-gradient(circle, #b8860b, transparent);
+          background: radial-gradient(circle, #0ea5e9, transparent);
           top: -10%; left: -10%;
           animation-duration: 14s;
         }
         .orb-2 {
           width: 500px; height: 500px;
-          background: radial-gradient(circle, #4a3800, transparent);
+          background: radial-gradient(circle, #075985, transparent);
           bottom: -10%; right: -5%;
           animation-duration: 10s;
           animation-delay: -4s;
         }
         .orb-3 {
           width: 350px; height: 350px;
-          background: radial-gradient(circle, #6b5200, transparent);
+          background: radial-gradient(circle, #0369a1, transparent);
           top: 40%; left: 55%;
           animation-duration: 16s;
           animation-delay: -8s;
@@ -67,7 +67,7 @@ export default function Home() {
           font-size: clamp(4rem, 14vw, 11rem);
           line-height: 0.9;
           letter-spacing: -0.03em;
-          background: linear-gradient(135deg, #fff 30%, #b8860b 60%, #fff 90%);
+          background: linear-gradient(135deg, #fff 30%, #0ea5e9 60%, #fff 90%);
           background-size: 200% auto;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -76,7 +76,7 @@ export default function Home() {
         }
         .text-outline {
           -webkit-text-fill-color: transparent;
-          -webkit-text-stroke: 1px rgba(184,134,11,0.6);
+          -webkit-text-stroke: 1px rgba(14,165,233,0.6);
           background: none;
         }
         @keyframes shimmer {
