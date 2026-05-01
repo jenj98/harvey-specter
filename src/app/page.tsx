@@ -4,7 +4,7 @@ import AboutSection from "@/components/AboutSection";
 export default function Home() {
   return (
     <>
-    <div className="relative flex-1 isolate overflow-hidden flex flex-col items-center px-4 pb-6 justify-between md:px-8 min-[1440px]:justify-start min-[1440px]:gap-[16.67vw] min-[1440px]:pb-0">
+    <div className="relative h-screen isolate overflow-hidden flex flex-col items-center px-4 pb-8 justify-between md:px-8 min-[1440px]:justify-start min-[1440px]:gap-[16.67vw] min-[1440px]:pb-0">
 
       {/* ── Desktop background image (≥768px) ────────────────────────────
           hero-desktop.png is 1440×847 — exactly the Figma frame.
