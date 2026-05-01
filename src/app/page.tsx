@@ -3,6 +3,7 @@ import AboutSection from "@/components/AboutSection";
 import AboutSection2 from "@/components/AboutSection2";
 import PhotoSection from "@/components/PhotoSection";
 import DeliverablesSection from "@/components/DeliverablesSection";
+import SelectedWorkSection from "@/components/SelectedWorkSection";
 
 export default function Home() {
   return (
@@ -110,6 +111,7 @@ export default function Home() {
     <AboutSection2 />
     <PhotoSection />
     <DeliverablesSection />
+    <SelectedWorkSection />
     </>
   );
 }
