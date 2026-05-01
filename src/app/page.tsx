@@ -1,20 +1,10 @@
 import Navbar from "@/components/Navbar";
+import AboutSection from "@/components/AboutSection";
 
 export default function Home() {
   return (
-    /*
-      `flex-1` fills remaining body height (body is min-h-full flex flex-col).
-      `isolate` scopes mix-blend-overlay on the H1 to blend with the photo.
-      `overflow-hidden` clips the full-bleed images.
-
-      STACKING ORDER within the isolate context:
-        1. images (absolute) — painted first
-        2. blur strip (absolute) — painted over images
-        3. Navbar (relative) — painted over blur strip
-        4. hero content (relative) — MUST be relative or it paints before
-           the absolute blur strip, making description text invisible.
-    */
-    <div className="relative flex-1 isolate overflow-hidden flex flex-col items-center px-4 pb-6 justify-between md:px-8 min-[1440px]:justify-start min-[1440px]:gap-[16.67vw] min-[1440px]:pb-0">
+    <>
+    <div className="relative h-screen isolate overflow-hidden flex flex-col items-center px-4 pb-8 justify-between md:px-8 min-[1440px]:justify-start min-[1440px]:gap-[16.67vw] min-[1440px]:pb-0">
 
       {/* ── Desktop background image (≥768px) ────────────────────────────
           hero-desktop.png is 1440×847 — exactly the Figma frame.
@@ -112,5 +102,8 @@ export default function Home() {
         </div>
       </div>
     </div>
+
+    <AboutSection />
+    </>
   );
 }
