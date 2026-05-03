@@ -6,6 +6,7 @@ import DeliverablesSection from "@/components/DeliverablesSection";
 import SelectedWorkSection from "@/components/SelectedWorkSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import NewsAndAchievementsSection from "@/components/NewsAndAchievementsSection";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -116,6 +117,7 @@ export default function Home() {
     <SelectedWorkSection />
     <TestimonialsSection />
     <NewsAndAchievementsSection />
+    <Footer />
     </>
   );
 }
