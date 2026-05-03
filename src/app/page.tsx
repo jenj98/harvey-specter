@@ -4,6 +4,8 @@ import AboutSection2 from "@/components/AboutSection2";
 import PhotoSection from "@/components/PhotoSection";
 import DeliverablesSection from "@/components/DeliverablesSection";
 import SelectedWorkSection from "@/components/SelectedWorkSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import NewsAndAchievementsSection from "@/components/NewsAndAchievementsSection";
 
 export default function Home() {
   return (
@@ -112,6 +114,8 @@ export default function Home() {
     <PhotoSection />
     <DeliverablesSection />
     <SelectedWorkSection />
+    <TestimonialsSection />
+    <NewsAndAchievementsSection />
     </>
   );
 }
