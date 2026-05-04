@@ -14,7 +14,7 @@ export default function Home() {
         4. hero content (relative) — MUST be relative or it paints before
            the absolute blur strip, making description text invisible.
     */
-    <div className="relative flex-1 isolate overflow-hidden flex flex-col items-center px-4 pb-6 justify-between md:px-8 min-[1440px]:justify-start min-[1440px]:gap-[16.67vw] min-[1440px]:pb-0">
+    <div className="relative flex-1 isolate overflow-hidden flex flex-col items-center px-4 pb-6 justify-between md:px-8 xl:justify-start xl:gap-[240px] xl:pb-0">
 
       {/* ── Desktop background image (≥768px) ────────────────────────────
           hero-desktop.png is 1440×847 — exactly the Figma frame.
@@ -64,7 +64,7 @@ export default function Home() {
           Desktop (Figma 1:10):  shrink-0, natural height
             → sits at navbar_height + gap (16.67vw ≈ 240px at 1440px)
       */}
-      <div className="relative flex flex-col w-full gap-6 md:gap-0 min-[1440px]:shrink-0">
+      <div className="relative flex flex-col w-full gap-6 md:gap-0 xl:shrink-0">
 
         {/* ── Label + H1 ─────────────────────────────────────────────────
             Mobile:  items-center, label justify-center, H1 text-center
@@ -78,7 +78,7 @@ export default function Home() {
             </p>
           </div>
           <div className="mb-[-15px] w-full">
-            <h1 className="font-inter font-medium text-white text-center capitalize mix-blend-overlay w-full whitespace-pre-wrap tracking-[-0.07em] leading-[0.8] text-[25.6vw] md:text-[13.75vw] md:leading-[1.1]">
+            <h1 className="font-inter font-medium text-white text-center capitalize mix-blend-overlay w-full whitespace-pre-wrap md:whitespace-pre tracking-[-0.07em] leading-[0.8] text-[25.6vw] md:text-[13.75vw] md:leading-[1.1]">
               {"Harvey   Specter"}
             </h1>
           </div>
