@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import FillButton from "@/components/FillButton";
 import AboutSection from "@/components/AboutSection";
 import AboutSection2 from "@/components/AboutSection2";
 import PhotoSection from "@/components/PhotoSection";
@@ -114,9 +115,9 @@ export default function Home() {
                 engineering.
               </span>
             </p>
-            <button className="bg-black text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px] hover:bg-neutral-800 transition-colors duration-150">
+            <FillButton className="bg-black text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px]">
               Let&apos;s talk
-            </button>
+            </FillButton>
           </div>
         </div>
       </div>

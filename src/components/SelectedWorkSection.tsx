@@ -1,4 +1,5 @@
 import { client, urlFor } from '@/lib/sanity/client'
+import FillButton from '@/components/FillButton'
 
 interface SelectedWork {
   _id: string
@@ -89,9 +90,9 @@ function CtaBracket({ className = '' }: { className?: string }) {
           Discover how my creativity transforms ideas into impactful digital
           experiences — schedule a call with me to get started.
         </p>
-        <button className="self-start bg-black text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px] hover:bg-neutral-800 transition-colors duration-150">
+        <FillButton className="self-start bg-black text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px]">
           Let&apos;s talk
-        </button>
+        </FillButton>
       </div>
     </div>
   )

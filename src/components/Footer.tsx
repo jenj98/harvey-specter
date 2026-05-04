@@ -1,3 +1,5 @@
+import FillButton from "@/components/FillButton";
+
 export default function Footer() {
   return (
     <footer className="w-full bg-black">
@@ -14,9 +16,9 @@ export default function Footer() {
               <p className="font-inter font-light italic text-[24px] text-white tracking-[-0.96px] uppercase leading-[1.1]">
                 Have a <span className="font-black not-italic">project</span> in mind?
               </p>
-              <button className="self-start border border-white font-inter font-medium text-[14px] text-white tracking-[-0.56px] px-4 py-3 rounded-[24px] hover:bg-white hover:text-black transition-colors duration-150">
+              <FillButton className="self-start border border-white text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px]" fillColor="bg-white" textColor="white" hoverTextColor="black">
                 Let&apos;s talk
-              </button>
+              </FillButton>
             </div>
 
             {/* Center: social */}
@@ -85,9 +87,9 @@ export default function Footer() {
               <p className="font-inter font-light italic text-[24px] text-white tracking-[-0.96px] uppercase leading-[1.1]">
                 Have a <span className="font-black not-italic">project</span> in mind?
               </p>
-              <button className="self-start border border-white font-inter font-medium text-[14px] text-white tracking-[-0.56px] px-4 py-3 rounded-[24px] hover:bg-white hover:text-black transition-colors duration-150">
+              <FillButton className="self-start border border-white text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px]" fillColor="bg-white" textColor="white" hoverTextColor="black">
                 Let&apos;s talk
-              </button>
+              </FillButton>
             </div>
 
             {/* Social links stacked */}
