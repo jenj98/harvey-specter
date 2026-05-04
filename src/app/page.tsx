@@ -1,8 +1,16 @@
 import Navbar from "@/components/Navbar";
+import AboutSection from "@/components/AboutSection";
+import AboutSection2 from "@/components/AboutSection2";
+import PhotoSection from "@/components/PhotoSection";
+import DeliverablesSection from "@/components/DeliverablesSection";
+import SelectedWorkSection from "@/components/SelectedWorkSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import NewsAndAchievementsSection from "@/components/NewsAndAchievementsSection";
 
 export default function Home() {
   return (
-    /*
+    <>
+    {/*
       `flex-1` fills remaining body height (body is min-h-full flex flex-col).
       `isolate` scopes mix-blend-overlay on the H1 to blend with the photo.
       `overflow-hidden` clips the full-bleed images.
@@ -13,7 +21,7 @@ export default function Home() {
         3. Navbar (relative) — painted over blur strip
         4. hero content (relative) — MUST be relative or it paints before
            the absolute blur strip, making description text invisible.
-    */
+    */}
     <div className="relative flex-1 isolate overflow-hidden flex flex-col items-center px-4 pb-6 justify-between md:px-8 xl:justify-start xl:gap-[240px] xl:pb-0">
 
       {/* ── Desktop background image (≥768px) ────────────────────────────
@@ -112,5 +120,14 @@ export default function Home() {
         </div>
       </div>
     </div>
+
+    <AboutSection />
+    <AboutSection2 />
+    <PhotoSection />
+    <DeliverablesSection />
+    <SelectedWorkSection />
+    <TestimonialsSection />
+    <NewsAndAchievementsSection />
+    </>
   );
 }
