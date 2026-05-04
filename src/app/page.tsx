@@ -22,7 +22,7 @@ export default function Home() {
         4. hero content (relative) — MUST be relative or it paints before
            the absolute blur strip, making description text invisible.
     */}
-    <div className="relative flex-1 isolate overflow-hidden flex flex-col items-center px-4 pb-6 justify-between md:px-8 xl:justify-start xl:gap-[240px] xl:pb-0">
+    <div className="relative h-screen isolate overflow-hidden flex flex-col items-center px-4 pb-6 justify-between md:px-8 xl:justify-start xl:gap-[240px] xl:pb-0">
 
       {/* ── Desktop background image (≥768px) ────────────────────────────
           hero-desktop.png is 1440×847 — exactly the Figma frame.
