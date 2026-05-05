@@ -25,23 +25,51 @@ export default function AboutSection2() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Image: left-to-right clip reveal tied to scroll entry
+      // Image: 3D perspective lift reveal on scroll entry
       gsap.fromTo(
         imageRef.current,
-        { clipPath: "inset(0 100% 0 0)" },
         {
-          clipPath: "inset(0 0% 0 0)",
-          ease: "power3.inOut",
+          opacity: 0,
+          y: 80,
+          rotationX: 18,
+          scale: 0.92,
+          transformPerspective: 1000,
+          transformOrigin: "center bottom",
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotationX: 0,
+          scale: 1,
+          duration: 1.5,
+          ease: "power3.out",
           scrollTrigger: {
-            trigger: imageRef.current,
-            start: "top 85%",
-            end: "top 20%",
-            scrub: 1.5,
+            trigger: sectionRef.current,
+            start: "top 72%",
+            toggleActions: "play none none none",
           },
         }
       );
 
-      // Text: parallax slide out left as section scrolls through
+      // Text: rises in alongside image
+      gsap.fromTo(
+        textRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.3,
+          ease: "power3.out",
+          delay: 0.15,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 72%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // Text: parallax slide out left as section exits
       gsap.to(textRef.current, {
         x: "-15vw",
         ease: "none",
