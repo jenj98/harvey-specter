@@ -27,18 +27,20 @@ export default function FillButton({
     const fill = fillRef.current;
     if (!btn || !fill) return;
 
+    // Kill any in-flight animations so a quick re-hover starts clean
+    gsap.killTweensOf([fill, textRef.current]);
+
     const rect = btn.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const radius = Math.hypot(rect.width, rect.height) * 1.1;
 
-    // Snap fill circle to cursor entry point then expand
+    // Snap circle to cursor entry point then expand
     gsap.set(fill, { left: x, top: y, width: 0, height: 0, xPercent: -50, yPercent: -50, opacity: 1 });
-    gsap.to(fill, { width: radius * 2, height: radius * 2, duration: 0.5, ease: "power2.out" });
+    gsap.to(fill, { width: radius * 2, height: radius * 2, duration: 0.45, ease: "power2.out" });
 
-    if (hoverTextColor) {
-      gsap.to(textRef.current, { color: hoverTextColor, duration: 0.4, ease: "power2.out" });
-    }
+    // Delay text color slightly so the fill is visible before text flips
+    gsap.to(textRef.current, { color: hoverTextColor, duration: 0.3, ease: "power2.out", delay: 0.12 });
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -57,13 +59,14 @@ export default function FillButton({
     const fill = fillRef.current;
     if (!fill) return;
 
-    gsap.to(fill, { width: 0, height: 0, opacity: 0, duration: 0.4, ease: "power2.in" });
+    // Kill in-flight tweens and immediately reset fill + text color
+    gsap.killTweensOf([fill, textRef.current]);
+    gsap.set(fill, { opacity: 0, width: 0, height: 0 });
+    gsap.set(textRef.current, { clearProps: "color" });
+
+    // Elastic snap-back for the magnetic movement
     gsap.to(buttonRef.current, { x: 0, y: 0, duration: 0.75, ease: "elastic.out(1, 0.45)" });
     gsap.to(textRef.current, { x: 0, y: 0, duration: 0.75, ease: "elastic.out(1, 0.45)" });
-
-    if (hoverTextColor) {
-      gsap.to(textRef.current, { color: textColor ?? "white", duration: 0.3, ease: "power2.in" });
-    }
   };
 
   return (
