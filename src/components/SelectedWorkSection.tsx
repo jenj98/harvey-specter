@@ -1,3 +1,25 @@
+import { client, urlFor } from '@/lib/sanity/client'
+import FillButton from '@/components/FillButton'
+
+interface SelectedWork {
+  _id: string
+  title: string
+  slug: { current: string }
+  image: { asset: { _ref: string }; alt: string }
+  tags: string[]
+  order: number
+}
+
+async function getSelectedWorks(): Promise<SelectedWork[]> {
+  return client.fetch(
+    `*[_type == "selectedWork"] | order(order asc) {
+      _id, title, slug, image, tags, order
+    }`,
+    {},
+    { next: { revalidate: 60 } }
+  )
+}
+
 function ArrowIcon() {
   return (
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -10,41 +32,53 @@ function ArrowIcon() {
         strokeLinejoin="round"
       />
     </svg>
-  );
+  )
 }
 
-function ProjectCard({ title, image, imageClass }: {
-  title: string;
-  image: string;
-  imageClass: string;
-}) {
+// Orders 1 & 4 → tall (744px), orders 2 & 3 → short (699px)
+function heightClass(order: number) {
+  return order % 3 === 1 ? 'h-[744px]' : 'h-[699px]'
+}
+
+function aspectClass(order: number) {
+  return order % 3 === 1 ? 'aspect-[676/744]' : 'aspect-[676/699]'
+}
+
+function ProjectCard({ work, imageClass }: { work: SelectedWork; imageClass: string }) {
+  const imageUrl = urlFor(work.image).width(800).auto('format').url()
+
   return (
     <div className="flex flex-col gap-[10px]">
-      {/* isolate + overflow-hidden prevents backdrop-blur from escaping */}
       <div className={`relative overflow-hidden isolate ${imageClass}`}>
-        <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute bottom-4 left-4 z-10 flex gap-3 items-center">
-          {["Social Media", "Photography"].map((tag) => (
-            <span
-              key={tag}
-              className="font-inter font-medium text-[14px] text-[#111] tracking-[-0.56px] px-2 py-1 rounded-[24px] bg-[rgba(255,255,255,0.3)] backdrop-blur-[10px] whitespace-nowrap leading-normal"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+        <img
+          src={imageUrl}
+          alt={work.image.alt ?? work.title}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {work.tags?.length > 0 && (
+          <div className="absolute bottom-4 left-4 z-10 flex gap-3 items-center">
+            {work.tags.map((tag) => (
+              <span
+                key={tag}
+                className="font-inter font-medium text-[14px] text-[#111] tracking-[-0.56px] px-2 py-1 rounded-[24px] bg-[rgba(255,255,255,0.3)] backdrop-blur-[10px] whitespace-nowrap leading-normal"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       <div className="flex items-center justify-between">
         <p className="font-inter font-black text-[24px] md:text-[36px] text-black tracking-[-0.96px] md:tracking-[-1.44px] uppercase leading-[1.1] whitespace-nowrap">
-          {title}
+          {work.title}
         </p>
         <ArrowIcon />
       </div>
     </div>
-  );
+  )
 }
 
-function CtaBracket({ className = "" }: { className?: string }) {
+function CtaBracket({ className = '' }: { className?: string }) {
   return (
     <div className={`relative py-3 px-5 ${className}`}>
       <span className="absolute top-0 left-0 w-4 h-4 border-t border-l border-[#1f1f1f]" />
@@ -56,15 +90,20 @@ function CtaBracket({ className = "" }: { className?: string }) {
           Discover how my creativity transforms ideas into impactful digital
           experiences — schedule a call with me to get started.
         </p>
-        <button className="self-start bg-black text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px] hover:bg-neutral-800 transition-colors duration-150">
+        <FillButton className="self-start bg-black text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px]">
           Let&apos;s talk
-        </button>
+        </FillButton>
       </div>
     </div>
-  );
+  )
 }
 
-export default function SelectedWorkSection() {
+export default async function SelectedWorkSection() {
+  const works = await getSelectedWorks()
+
+  const left = works.filter((w) => w.order <= 2)
+  const right = works.filter((w) => w.order >= 3)
+
   return (
     <section className="w-full bg-white px-4 py-12 md:px-8 md:py-20">
 
@@ -98,35 +137,31 @@ export default function SelectedWorkSection() {
         </div>
       </div>
 
-      {/* ── Mobile: 4 cards stacked ─────────────────────────────────── */}
-      {/* aspect-[676/744] and aspect-[676/699] mirror the desktop card proportions */}
+      {/* ── Mobile: stacked ─────────────────────────────────────────── */}
       <div className="flex flex-col gap-6 md:hidden">
-        <ProjectCard title="Surfers Paradise"   image="/selected-1.webp" imageClass="w-full aspect-[676/744]" />
-        <ProjectCard title="Cyberpunk Caffe"    image="/selected-3.webp" imageClass="w-full aspect-[676/699]" />
-        <ProjectCard title="Agency 976"         image="/selected-2.webp" imageClass="w-full aspect-[676/699]" />
-        <ProjectCard title="Minimal Playground" image="/selected-4.webp" imageClass="w-full aspect-[676/744]" />
+        {works.map((work) => (
+          <ProjectCard key={work._id} work={work} imageClass={`w-full ${aspectClass(work.order)}`} />
+        ))}
         <CtaBracket className="w-full" />
       </div>
 
       {/* ── Desktop: two-column staggered grid ──────────────────────── */}
       <div className="hidden md:flex gap-6 items-end">
-
-        {/* Left column — stretches to row height, CTA pinned to bottom */}
         <div className="flex-1 self-stretch flex">
           <div className="flex-1 h-full flex flex-col justify-between">
-            <ProjectCard title="Surfers Paradise" image="/selected-1.webp" imageClass="h-[744px]" />
-            <ProjectCard title="Cyberpunk Caffe"  image="/selected-3.webp" imageClass="h-[699px]" />
+            {left.map((work) => (
+              <ProjectCard key={work._id} work={work} imageClass={heightClass(work.order)} />
+            ))}
             <CtaBracket className="w-[465px]" />
           </div>
         </div>
-
-        {/* Right column — offset 240px from top */}
         <div className="flex-1 flex flex-col gap-[117px] pt-[240px]">
-          <ProjectCard title="Agency 976"         image="/selected-2.webp" imageClass="h-[699px]" />
-          <ProjectCard title="Minimal Playground" image="/selected-4.webp" imageClass="h-[744px]" />
+          {right.map((work) => (
+            <ProjectCard key={work._id} work={work} imageClass={heightClass(work.order)} />
+          ))}
         </div>
-
       </div>
+
     </section>
-  );
+  )
 }

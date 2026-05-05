@@ -29,3 +29,20 @@ body {
 
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+@keyframes shimmer {
+  0%   { transform: translateX(-180%) skewX(-15deg); }
+  100% { transform: translateX(500%)  skewX(-15deg); }
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.11), transparent);
+  animation: shimmer 3.5s ease-in-out 1.2s infinite;
+  pointer-events: none;
+}
