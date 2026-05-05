@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function BracketFrame({ children, className = "", innerRef }: { children: React.ReactNode; className?: string; innerRef?: React.RefObject<HTMLDivElement> }) {
+function BracketFrame({ children, className = "", innerRef }: { children: React.ReactNode; className?: string; innerRef?: React.RefObject<HTMLDivElement | null> }) {
   return (
     <div ref={innerRef} className={`relative py-3 px-5 ${className}`}>
       <span className="absolute top-0 left-0 w-4 h-4 border-t border-l border-[#1f1f1f]" />
