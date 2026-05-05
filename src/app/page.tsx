@@ -104,7 +104,7 @@ export default function Home() {
 
     <AboutSection />
     <AboutSection2 />
-    <PhotoSection />
+    <div data-nav-theme="dark"><PhotoSection /></div>
     <div data-nav-theme="dark"><DeliverablesSection /></div>
     <SelectedWorkSection />
     <TestimonialsSection />
