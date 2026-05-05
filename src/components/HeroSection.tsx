@@ -16,7 +16,8 @@ export default function HeroSection() {
   const helloRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    const ctx = gsap.context((self) => {
+      const q = self.selector!;
       gsap.timeline({
         scrollTrigger: {
           trigger: heroRef.current,
@@ -25,9 +26,9 @@ export default function HeroSection() {
           scrub: 1,
         },
       })
-        .to([bgDesktopRef.current, bgMobileRef.current].filter(Boolean), { scale: 1.12, ease: "none" }, 0)
-        .to([harveyRef.current, helloRef.current].filter(Boolean), { x: "-15vw", ease: "none" }, 0)
-        .to(specterRef.current, { x: "15vw", ease: "none" }, 0);
+        .to(q("[data-parallax='bg']"), { scale: 1.12, ease: "none" }, 0)
+        .to(q("[data-parallax='left']"), { x: "-15vw", ease: "none" }, 0)
+        .to(q("[data-parallax='right']"), { x: "15vw", ease: "none" }, 0);
     }, heroRef);
 
     return () => ctx.revert();
@@ -40,12 +41,14 @@ export default function HeroSection() {
     >
       <img
         ref={bgDesktopRef}
+        data-parallax="bg"
         alt=""
         src="/hero-desktop.png"
         className="absolute hidden md:block inset-0 w-full h-full object-cover object-top pointer-events-none"
       />
       <img
         ref={bgMobileRef}
+        data-parallax="bg"
         alt=""
         src="/hero-mobile.png"
         className="absolute md:hidden inset-0 w-full h-full object-cover object-top pointer-events-none"
@@ -67,6 +70,7 @@ export default function HeroSection() {
           <div className="flex items-center justify-center md:justify-start mb-[-15px] px-[18px] w-full">
             <p
               ref={helloRef}
+              data-parallax="left"
               className="font-mono font-normal text-[14px] text-white uppercase leading-[1.1] whitespace-nowrap"
             >
               [ Hello i&apos;m ]
@@ -74,10 +78,10 @@ export default function HeroSection() {
           </div>
           <div className="mb-[-15px] w-full">
             <h1 className="font-inter font-medium text-white text-center capitalize mix-blend-overlay w-full tracking-[-0.07em] leading-[0.8] text-[25.6vw] md:text-[13.75vw] md:leading-[1.1]">
-              <span ref={harveyRef} className="inline-block">Harvey</span>
+              <span ref={harveyRef} data-parallax="left" className="inline-block">Harvey</span>
               <br className="md:hidden" />
               <span className="hidden md:inline-block whitespace-pre">{"   "}</span>
-              <span ref={specterRef} className="inline-block">Specter</span>
+              <span ref={specterRef} data-parallax="right" className="inline-block">Specter</span>
             </h1>
           </div>
         </div>
