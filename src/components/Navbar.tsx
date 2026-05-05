@@ -45,6 +45,8 @@ export default function Navbar() {
   const studioRef = useRef<HTMLSpanElement>(null);
   const prevScrollYRef = useRef(0);
   const rafRef = useRef<number | null>(null);
+  const navYRef = useRef(0);
+  const snappingBackRef = useRef(false);
 
   // Entry animation
   useEffect(() => {
@@ -90,21 +92,40 @@ export default function Navbar() {
         rafRef.current = null;
         const scrollY = window.scrollY;
         const direction = scrollY > prevScrollYRef.current ? "down" : "up";
+        const delta = scrollY - prevScrollYRef.current;
         prevScrollYRef.current = scrollY;
 
         if (scrollY <= 0) {
-          gsap.to(wrapperRef.current, { y: 0, duration: 0.5, ease: "power3.out", overwrite: "auto" });
+          navYRef.current = 0;
+          snappingBackRef.current = false;
+          gsap.killTweensOf(wrapperRef.current);
+          gsap.set(wrapperRef.current, { y: 0 });
           gsap.to(backdropRef.current, { opacity: 0, duration: 0.4, overwrite: "auto" });
           setTheme("light");
           return;
         }
 
         if (direction === "down") {
-          gsap.to(wrapperRef.current, { y: "-100%", duration: 0.45, ease: "power3.inOut", overwrite: "auto" });
-          gsap.to(backdropRef.current, { opacity: 0, duration: 0.3, overwrite: "auto" });
-        } else if (direction === "up") {
-          gsap.to(wrapperRef.current, { y: 0, duration: 0.4, ease: "power3.out", overwrite: "auto" });
-          gsap.to(backdropRef.current, { opacity: 1, duration: 0.5, overwrite: "auto" });
+          // Physically follow scroll — no easing, 1:1 with scroll delta
+          snappingBackRef.current = false;
+          gsap.killTweensOf(wrapperRef.current);
+          const navH = wrapperRef.current?.offsetHeight ?? 72;
+          const currentY = gsap.getProperty(wrapperRef.current, "y") as number;
+          navYRef.current = Math.min(-currentY + delta, navH);
+          gsap.set(wrapperRef.current, { y: -navYRef.current });
+          gsap.to(backdropRef.current, { opacity: 0, duration: 0.2, overwrite: "auto" });
+        } else if (direction === "up" && !snappingBackRef.current) {
+          // Snap back once with smooth ease
+          snappingBackRef.current = true;
+          navYRef.current = 0;
+          gsap.to(wrapperRef.current, {
+            y: 0,
+            duration: 0.4,
+            ease: "power3.out",
+            overwrite: "auto",
+            onComplete: () => { snappingBackRef.current = false; },
+          });
+          gsap.to(backdropRef.current, { opacity: 1, duration: 0.4, overwrite: "auto" });
         }
 
         updateTheme();
