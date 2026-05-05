@@ -11,7 +11,6 @@ const NAV_H = 80;
 
 function NavLink({ label, theme }: { label: string; theme: "light" | "dark" }) {
   const innerRef = useRef<HTMLSpanElement>(null);
-
   return (
     <a
       href="#"
@@ -43,10 +42,6 @@ export default function Navbar() {
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const hRef = useRef<HTMLSpanElement>(null);
   const studioRef = useRef<HTMLSpanElement>(null);
-  const prevScrollYRef = useRef(0);
-  const rafRef = useRef<number | null>(null);
-  const navYRef = useRef(0);
-  const snappingBackRef = useRef(false);
 
   // Entry animation
   useEffect(() => {
@@ -71,8 +66,11 @@ export default function Navbar() {
     }
   }, []);
 
-  // Scroll: hide/show + backdrop + background awareness
+  // Scroll: hide on down, reveal on up
   useEffect(() => {
+    let lastY = window.scrollY;
+    let hidden = false;
+
     const updateTheme = () => {
       const darkEls = document.querySelectorAll("[data-nav-theme='dark']");
       let isDark = false;
@@ -86,57 +84,36 @@ export default function Navbar() {
       });
     };
 
-    const handleScroll = () => {
-      if (rafRef.current !== null) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        const scrollY = window.scrollY;
-        const direction = scrollY > prevScrollYRef.current ? "down" : "up";
-        const delta = scrollY - prevScrollYRef.current;
-        prevScrollYRef.current = scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
 
-        if (scrollY <= 0) {
-          navYRef.current = 0;
-          snappingBackRef.current = false;
-          gsap.killTweensOf(wrapperRef.current);
-          gsap.set(wrapperRef.current, { y: 0 });
-          gsap.to(backdropRef.current, { opacity: 0, duration: 0.4, overwrite: "auto" });
-          setTheme("light");
-          return;
-        }
+      if (y <= 0) {
+        hidden = false;
+        gsap.to(wrapperRef.current, { y: 0, duration: 0.35, ease: "power3.out", overwrite: "auto" });
+        gsap.to(backdropRef.current, { opacity: 0, duration: 0.3, overwrite: "auto" });
+        setTheme("light");
+        lastY = y;
+        return;
+      }
 
-        if (direction === "down") {
-          // Physically follow scroll — no easing, 1:1 with scroll delta
-          snappingBackRef.current = false;
-          gsap.killTweensOf(wrapperRef.current);
-          const navH = wrapperRef.current?.offsetHeight ?? 72;
-          const currentY = gsap.getProperty(wrapperRef.current, "y") as number;
-          navYRef.current = Math.min(-currentY + delta, navH);
-          gsap.set(wrapperRef.current, { y: -navYRef.current });
-          gsap.to(backdropRef.current, { opacity: 0, duration: 0.2, overwrite: "auto" });
-        } else if (direction === "up" && !snappingBackRef.current) {
-          // Snap back once with smooth ease
-          snappingBackRef.current = true;
-          navYRef.current = 0;
-          gsap.to(wrapperRef.current, {
-            y: 0,
-            duration: 0.4,
-            ease: "power3.out",
-            overwrite: "auto",
-            onComplete: () => { snappingBackRef.current = false; },
-          });
-          gsap.to(backdropRef.current, { opacity: 1, duration: 0.4, overwrite: "auto" });
-        }
+      const goingDown = y > lastY;
+      lastY = y;
 
-        updateTheme();
-      });
+      if (goingDown && !hidden) {
+        hidden = true;
+        gsap.to(wrapperRef.current, { y: "-100%", duration: 0.35, ease: "power2.inOut", overwrite: "auto" });
+        gsap.to(backdropRef.current, { opacity: 0, duration: 0.2, overwrite: "auto" });
+      } else if (!goingDown && hidden) {
+        hidden = false;
+        gsap.to(wrapperRef.current, { y: 0, duration: 0.4, ease: "power3.out", overwrite: "auto" });
+        gsap.to(backdropRef.current, { opacity: 1, duration: 0.4, overwrite: "auto" });
+      }
+
+      updateTheme();
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // Body scroll lock
@@ -145,23 +122,14 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Mobile menu clip-path animation
+  // Mobile menu animation
   useEffect(() => {
     const overlay = overlayRef.current;
     if (!overlay) return;
-
     if (open) {
       overlay.style.pointerEvents = "auto";
-      gsap.fromTo(
-        overlay,
-        { clipPath: `circle(0% at ${MENU_ORIGIN})` },
-        { clipPath: `circle(150% at ${MENU_ORIGIN})`, duration: 0.75, ease: "power3.inOut" }
-      );
-      gsap.fromTo(
-        menuItemsRef.current,
-        { y: 36, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.07, delay: 0.35 }
-      );
+      gsap.fromTo(overlay, { clipPath: `circle(0% at ${MENU_ORIGIN})` }, { clipPath: `circle(150% at ${MENU_ORIGIN})`, duration: 0.75, ease: "power3.inOut" });
+      gsap.fromTo(menuItemsRef.current, { y: 36, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.07, delay: 0.35 });
     } else {
       gsap.to(overlay, {
         clipPath: `circle(0% at ${MENU_ORIGIN})`,
@@ -175,7 +143,6 @@ export default function Navbar() {
   return (
     <div ref={wrapperRef} className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8">
 
-      {/* Backdrop blur — fades in on scroll, adapts to dark/light sections */}
       <div
         ref={backdropRef}
         className="absolute inset-0 pointer-events-none opacity-0"
@@ -253,26 +220,18 @@ export default function Navbar() {
         style={{ clipPath: `circle(0% at ${MENU_ORIGIN})` }}
       >
         <div className="flex items-center justify-between px-4 py-6">
-          <span className="font-inter font-semibold text-[16px] text-black capitalize tracking-[-0.64px]">
-            H.Studio
-          </span>
+          <span className="font-inter font-semibold text-[16px] text-black capitalize tracking-[-0.64px]">H.Studio</span>
           <div className="w-6" />
         </div>
-
         <ul className="flex-1 flex flex-col items-center justify-center gap-1 list-none m-0 p-0">
           {navLinks.map((link, i) => (
             <li key={link} ref={(el) => { menuItemsRef.current[i] = el; }}>
-              <a
-                href="#"
-                className="block font-inter font-light text-[42px] text-black capitalize tracking-[-2px] leading-[1.15]"
-                onClick={() => setOpen(false)}
-              >
+              <a href="#" className="block font-inter font-light text-[42px] text-black capitalize tracking-[-2px] leading-[1.15]" onClick={() => setOpen(false)}>
                 {link}
               </a>
             </li>
           ))}
         </ul>
-
         <div className="px-4 pb-12 flex justify-center">
           <button
             className="relative overflow-hidden btn-shimmer bg-black text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-8 py-4 rounded-[24px]"
