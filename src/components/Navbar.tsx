@@ -101,7 +101,7 @@ export default function Navbar() {
 
         gsap.to(backdropRef.current, { opacity: 1, duration: 0.5, overwrite: "auto" });
 
-        if (direction === "down" && scrollY > 80) {
+        if (direction === "down") {
           gsap.to(wrapperRef.current, { y: "-100%", duration: 0.45, ease: "power3.inOut", overwrite: "auto" });
         } else if (direction === "up") {
           gsap.to(wrapperRef.current, { y: 0, duration: 0.4, ease: "power3.out", overwrite: "auto" });
@@ -161,8 +161,6 @@ export default function Navbar() {
         style={{
           backdropFilter: "blur(14px)",
           WebkitBackdropFilter: "blur(14px)",
-          backgroundColor: theme === "dark" ? "rgba(0,0,0,0.72)" : "rgba(255,255,255,0.72)",
-          transition: "background-color 0.35s ease",
           WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
           maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
         }}
@@ -201,7 +199,7 @@ export default function Navbar() {
             className={`whitespace-nowrap font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px] border transition-colors duration-300 ${
               theme === "dark"
                 ? "bg-transparent border-white text-white"
-                : "bg-black border-black text-white"
+                : "bg-black border-transparent text-white"
             }`}
             fillColor="bg-white"
             hoverTextColor="black"
