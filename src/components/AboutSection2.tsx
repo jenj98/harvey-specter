@@ -43,10 +43,11 @@ export default function AboutSection2() {
           scale: 1,
           duration: 1.5,
           ease: "power3.out",
+          immediateRender: false,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 72%",
-            toggleActions: "play none none none",
+            start: "top 80%",
+            once: true,
           },
         }
       );
@@ -61,10 +62,11 @@ export default function AboutSection2() {
           duration: 1.3,
           ease: "power3.out",
           delay: 0.15,
+          immediateRender: false,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 72%",
-            toggleActions: "play none none none",
+            start: "top 80%",
+            once: true,
           },
         }
       );
