@@ -37,7 +37,7 @@ export default function HeroSection() {
   return (
     <div
       ref={heroRef}
-      className="relative h-screen isolate overflow-hidden flex flex-col items-center px-4 pb-6 justify-between md:px-8 xl:justify-start xl:gap-[240px] xl:pb-0"
+      className="relative h-screen isolate overflow-hidden flex flex-col items-center px-4 pb-16 justify-between md:px-8 xl:justify-start xl:gap-[240px]"
     >
       <img
         ref={bgDesktopRef}
