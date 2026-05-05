@@ -12,18 +12,7 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
-    {/*
-      `flex-1` fills remaining body height (body is min-h-full flex flex-col).
-      `isolate` scopes mix-blend-overlay on the H1 to blend with the photo.
-      `overflow-hidden` clips the full-bleed images.
-
-      STACKING ORDER within the isolate context:
-        1. images (absolute) — painted first
-        2. blur strip (absolute) — painted over images
-        3. Navbar (relative) — painted over blur strip
-        4. hero content (relative) — MUST be relative or it paints before
-           the absolute blur strip, making description text invisible.
-    */}
+    <Navbar />
     <div className="relative h-screen isolate overflow-hidden flex flex-col items-center px-4 pb-6 justify-between md:px-8 xl:justify-start xl:gap-[240px] xl:pb-0">
 
       {/* ── Desktop background image (≥768px) ────────────────────────────
@@ -61,19 +50,9 @@ export default function Home() {
         }}
       />
 
-      {/* ── Navbar ───────────────────────────────────────────────────────
-          relative — paints above blur strip. Transparent background.
-      */}
-      <Navbar />
+      {/* Spacer — keeps hero layout identical now that Navbar is fixed */}
+      <div className="shrink-0 h-[72px]" aria-hidden="true" />
 
-      {/* ── Hero content ─────────────────────────────────────────────────
-          relative — REQUIRED to paint above the absolute blur strip.
-
-          Mobile  (Figma 1:283): h-[341px] justify-between
-            → label+H1 block at top, description+button at bottom
-          Desktop (Figma 1:10):  shrink-0, natural height
-            → sits at navbar_height + gap (16.67vw ≈ 240px at 1440px)
-      */}
       <div className="relative flex flex-col w-full gap-6 md:gap-0 xl:shrink-0">
 
         {/* ── Label + H1 ─────────────────────────────────────────────────
@@ -125,12 +104,12 @@ export default function Home() {
 
     <AboutSection />
     <AboutSection2 />
-    <PhotoSection />
-    <DeliverablesSection />
+    <div data-nav-theme="dark"><PhotoSection /></div>
+    <div data-nav-theme="dark"><DeliverablesSection /></div>
     <SelectedWorkSection />
     <TestimonialsSection />
     <NewsAndAchievementsSection />
-    <Footer />
+    <div data-nav-theme="dark"><Footer /></div>
     </>
   );
 }
