@@ -73,9 +73,10 @@ export default function HeroSection() {
             </p>
           </div>
           <div className="mb-[-15px] w-full">
-            <h1 className="font-inter font-medium text-white text-center capitalize mix-blend-overlay w-full whitespace-pre tracking-[-0.07em] leading-[0.8] text-[25.6vw] md:text-[13.75vw] md:leading-[1.1]">
+            <h1 className="font-inter font-medium text-white text-center capitalize mix-blend-overlay w-full tracking-[-0.07em] leading-[0.8] text-[25.6vw] md:text-[13.75vw] md:leading-[1.1]">
               <span ref={harveyRef} className="inline-block">Harvey</span>
-              {"   "}
+              <br className="md:hidden" />
+              <span className="hidden md:inline-block whitespace-pre">{"   "}</span>
               <span ref={specterRef} className="inline-block">Specter</span>
             </h1>
           </div>
