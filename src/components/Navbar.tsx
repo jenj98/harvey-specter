@@ -99,12 +99,12 @@ export default function Navbar() {
           return;
         }
 
-        gsap.to(backdropRef.current, { opacity: 1, duration: 0.5, overwrite: "auto" });
-
         if (direction === "down") {
           gsap.to(wrapperRef.current, { y: "-100%", duration: 0.45, ease: "power3.inOut", overwrite: "auto" });
+          gsap.to(backdropRef.current, { opacity: 0, duration: 0.3, overwrite: "auto" });
         } else if (direction === "up") {
           gsap.to(wrapperRef.current, { y: 0, duration: 0.4, ease: "power3.out", overwrite: "auto" });
+          gsap.to(backdropRef.current, { opacity: 1, duration: 0.5, overwrite: "auto" });
         }
 
         updateTheme();
@@ -196,10 +196,10 @@ export default function Navbar() {
 
         <div ref={ctaRef} className="hidden md:block">
           <FillButton
-            className={`whitespace-nowrap font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px] border transition-colors duration-300 ${
+            className={`whitespace-nowrap font-inter font-medium text-[14px] tracking-[-0.56px] px-4 py-3 rounded-[24px] transition-colors duration-300 ${
               theme === "dark"
-                ? "bg-transparent border-white text-white"
-                : "bg-black border-transparent text-white"
+                ? "border border-white bg-transparent text-white"
+                : "bg-black text-white"
             }`}
             fillColor="bg-white"
             hoverTextColor="black"
