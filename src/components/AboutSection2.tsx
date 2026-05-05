@@ -25,7 +25,7 @@ export default function AboutSection2() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Image: 3D perspective lift reveal on scroll entry
+      // Image: 3D perspective lift — scrubbed to scroll entry
       gsap.fromTo(
         imageRef.current,
         {
@@ -41,32 +41,29 @@ export default function AboutSection2() {
           y: 0,
           rotationX: 0,
           scale: 1,
-          duration: 1.5,
-          ease: "power3.out",
-          immediateRender: false,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 80%",
-            once: true,
+            start: "top 85%",
+            end: "center 55%",
+            scrub: 1.5,
           },
         }
       );
 
-      // Text: rises in alongside image
+      // Text: rises in alongside image — scrubbed to scroll entry
       gsap.fromTo(
         textRef.current,
         { opacity: 0, y: 50 },
         {
           opacity: 1,
           y: 0,
-          duration: 1.3,
-          ease: "power3.out",
-          delay: 0.15,
-          immediateRender: false,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 80%",
-            once: true,
+            end: "center 50%",
+            scrub: 1.5,
           },
         }
       );
