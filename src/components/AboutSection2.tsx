@@ -47,7 +47,7 @@ export default function AboutSection2() {
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top bottom",
+          start: "top top",
           end: "bottom top",
           scrub: 1.5,
         },
