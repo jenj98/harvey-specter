@@ -6,9 +6,9 @@ import gsap from "gsap";
 export default function FillButton({
   children,
   className = "",
-  fillColor = "bg-neutral-700",
-  textColor,
-  hoverTextColor,
+  fillColor = "bg-white",
+  textColor = "white",
+  hoverTextColor = "black",
   onClick,
 }: {
   children: React.ReactNode;
@@ -18,34 +18,67 @@ export default function FillButton({
   hoverTextColor?: string;
   onClick?: () => void;
 }) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const fillRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
 
-  const onEnter = () => {
-    gsap.to(fillRef.current, { y: "0%", duration: 0.35, ease: "power2.out" });
+  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = buttonRef.current;
+    const fill = fillRef.current;
+    if (!btn || !fill) return;
+
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const radius = Math.hypot(rect.width, rect.height) * 1.1;
+
+    // Snap fill circle to cursor entry point then expand
+    gsap.set(fill, { left: x, top: y, width: 0, height: 0, xPercent: -50, yPercent: -50, opacity: 1 });
+    gsap.to(fill, { width: radius * 2, height: radius * 2, duration: 0.5, ease: "power2.out" });
+
     if (hoverTextColor) {
-      gsap.to(textRef.current, { color: hoverTextColor, duration: 0.35, ease: "power2.out" });
+      gsap.to(textRef.current, { color: hoverTextColor, duration: 0.4, ease: "power2.out" });
     }
   };
 
-  const onLeave = () => {
-    gsap.to(fillRef.current, { y: "100%", duration: 0.35, ease: "power2.in" });
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = buttonRef.current;
+    if (!btn) return;
+
+    const rect = btn.getBoundingClientRect();
+    const dx = e.clientX - (rect.left + rect.width / 2);
+    const dy = e.clientY - (rect.top + rect.height / 2);
+
+    gsap.to(btn, { x: dx * 0.28, y: dy * 0.38, duration: 0.35, ease: "power2.out" });
+    gsap.to(textRef.current, { x: dx * 0.1, y: dy * 0.14, duration: 0.35, ease: "power2.out" });
+  };
+
+  const handleMouseLeave = () => {
+    const fill = fillRef.current;
+    if (!fill) return;
+
+    gsap.to(fill, { width: 0, height: 0, opacity: 0, duration: 0.4, ease: "power2.in" });
+    gsap.to(buttonRef.current, { x: 0, y: 0, duration: 0.75, ease: "elastic.out(1, 0.45)" });
+    gsap.to(textRef.current, { x: 0, y: 0, duration: 0.75, ease: "elastic.out(1, 0.45)" });
+
     if (hoverTextColor) {
-      gsap.to(textRef.current, { color: textColor ?? "white", duration: 0.35, ease: "power2.in" });
+      gsap.to(textRef.current, { color: textColor ?? "white", duration: 0.3, ease: "power2.in" });
     }
   };
 
   return (
     <button
+      ref={buttonRef}
       className={`relative overflow-hidden ${className}`}
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       onClick={onClick}
     >
       <span
         ref={fillRef}
-        className={`absolute inset-0 ${fillColor}`}
-        style={{ transform: "translateY(100%)" }}
+        className={`absolute pointer-events-none rounded-full ${fillColor}`}
+        style={{ opacity: 0, left: 0, top: 0, width: 0, height: 0 }}
       />
       <span ref={textRef} className="relative">{children}</span>
     </button>
