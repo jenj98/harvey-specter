@@ -1,3 +1,4 @@
 import { selectedWork } from './selectedWork'
+import { service } from './service'
 
-export const schemaTypes = [selectedWork]
+export const schemaTypes = [selectedWork, service]
