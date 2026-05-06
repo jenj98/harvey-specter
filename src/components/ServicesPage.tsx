@@ -7,9 +7,25 @@ import FillButton from "@/components/FillButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-const offerings = [
+export type Offering = {
+  num: string;
+  title: string;
+  image: string;
+  description: string;
+  deliverables: string[];
+};
+
+export type ProcessStep = {
+  num: string;
+  label: string;
+  description: string;
+};
+
+// ─── Fallback data (used when Sanity has no document yet) ─────────────────────
+
+const defaultOfferings: Offering[] = [
   {
     num: "01",
     title: "Creative Direction",
@@ -42,9 +58,9 @@ const offerings = [
       "Design and direction for websites, campaigns, and interactive touchpoints — where brand identity becomes something people move through and remember.",
     deliverables: ["UX/UI Design", "Prototypes", "Design System", "Dev Handoff"],
   },
-] as const;
+];
 
-const processSteps = [
+const defaultProcessSteps: ProcessStep[] = [
   {
     num: "01",
     label: "Discover",
@@ -69,17 +85,19 @@ const processSteps = [
     description:
       "Final assets, handed over with clarity. Everything needed to launch — nothing that isn't.",
   },
-] as const;
+];
 
 const expectations = [
-  { label: "Kick-off",      detail: "Most projects start within 2 weeks of an initial call." },
-  { label: "Duration",      detail: "Depending on scope, engagements run 2–8 weeks." },
-  { label: "What to bring", detail: "A brief, references you admire, and a clear sense of what to avoid." },
+  { label: "Kick-off",       detail: "Most projects start within 2 weeks of an initial call." },
+  { label: "Duration",       detail: "Depending on scope, engagements run 2–8 weeks." },
+  { label: "What to bring",  detail: "A brief, references you admire, and a clear sense of what to avoid." },
 ] as const;
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
-function Hero() {
+const heroIndents = ["", "md:pl-[8vw]", "md:pl-[4vw]", "md:pl-[14vw]"];
+
+function Hero({ offerings }: { offerings: Offering[] }) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -93,13 +111,6 @@ function Hero() {
     return () => ctx.revert();
   }, []);
 
-  const lines: [string, string][] = [
-    ["Creative Direction", ""],
-    ["Brand Discovery",    "md:pl-[8vw]"],
-    ["Photography",        "md:pl-[4vw]"],
-    ["Web Design & Dev",   "md:pl-[14vw]"],
-  ];
-
   return (
     <section
       ref={ref}
@@ -112,14 +123,14 @@ function Hero() {
       </div>
 
       <div className="flex-1 flex flex-col justify-center py-10 md:py-14 gap-0">
-        {lines.map(([label, indent]) => (
+        {offerings.map((o, i) => (
           <p
-            key={label}
+            key={o.num}
             data-hero-svc=""
-            className={`font-inter font-light text-white uppercase tracking-[-0.04em] leading-[0.88] ${indent}`}
+            className={`font-inter font-light text-white uppercase tracking-[-0.04em] leading-[0.88] ${heroIndents[i] ?? ""}`}
             style={{ fontSize: "clamp(32px, 7.5vw, 108px)" }}
           >
-            {label}
+            {o.title}
           </p>
         ))}
       </div>
@@ -132,9 +143,7 @@ function Hero() {
   );
 }
 
-// ─── Service row — alternating image/text layout ───────────────────────────
-
-type Offering = (typeof offerings)[number];
+// ─── Service row ──────────────────────────────────────────────────────────────
 
 function ServiceRow({ offering, isReversed }: { offering: Offering; isReversed: boolean }) {
   const imgRef   = useRef<HTMLImageElement>(null);
@@ -156,7 +165,6 @@ function ServiceRow({ offering, isReversed }: { offering: Offering; isReversed: 
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
-      {/* Image — full-height, 45% on desktop */}
       <div className="h-[260px] md:h-auto md:w-[45%] md:shrink-0 md:self-stretch overflow-hidden">
         <img
           ref={imgRef}
@@ -166,7 +174,6 @@ function ServiceRow({ offering, isReversed }: { offering: Offering; isReversed: 
         />
       </div>
 
-      {/* Text content */}
       <div className="flex-1 flex flex-col justify-center gap-5 px-6 md:px-14 py-10 md:py-14">
         <span className="font-mono font-normal text-[11px] text-[#aaa] uppercase">{offering.num}</span>
         <span
@@ -195,7 +202,7 @@ function ServiceRow({ offering, isReversed }: { offering: Offering; isReversed: 
 
 // ─── Offerings ────────────────────────────────────────────────────────────────
 
-function Offerings() {
+function Offerings({ offerings }: { offerings: Offering[] }) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -218,28 +225,24 @@ function Offerings() {
   }, []);
 
   return (
-    // Warm cream — distinct from About's clinical white
     <section ref={ref} className="w-full bg-[#f7f5f0]">
-
       <div data-offerings-header="" className="px-4 md:px-8 pt-[80px] md:pt-[120px] pb-10 md:pb-14 flex items-center justify-between">
         <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">[ What We Do ]</p>
         <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">002</p>
       </div>
 
-      {/* Full-width alternating rows — no horizontal section padding */}
       <div className="flex flex-col">
         {offerings.map((o, i) => (
           <ServiceRow key={o.num} offering={o} isReversed={i % 2 !== 0} />
         ))}
       </div>
-
     </section>
   );
 }
 
 // ─── Process ──────────────────────────────────────────────────────────────────
 
-function Process() {
+function Process({ steps }: { steps: ProcessStep[] }) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -269,16 +272,16 @@ function Process() {
         <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">003</p>
       </div>
 
-      {/* Desktop: 4 equal columns with vertical dividers — no staircase, no dead space */}
+      {/* Desktop: 4 columns with vertical dividers */}
       <div className="hidden md:flex">
-        {processSteps.map(({ num, label, description }, i) => (
+        {steps.map(({ num, label, description }, i) => (
           <div
             key={num}
             data-step=""
             className={[
               "flex-1 flex flex-col gap-5",
               i > 0 ? "border-l border-[#d5cfc5] pl-8" : "",
-              i < processSteps.length - 1 ? "pr-8" : "",
+              i < steps.length - 1 ? "pr-8" : "",
             ].join(" ")}
           >
             <span className="font-mono font-normal text-[11px] text-[#bbb] uppercase">{num}</span>
@@ -290,22 +293,20 @@ function Process() {
         ))}
       </div>
 
-      {/* Mobile: vertical timeline with connector line */}
+      {/* Mobile: vertical timeline */}
       <div className="md:hidden flex flex-col">
-        {processSteps.map(({ num, label, description }, i) => (
+        {steps.map(({ num, label, description }, i) => (
           <div key={num} data-step="" className="flex gap-5 pb-10">
             <div className="flex flex-col items-center shrink-0">
               <div className="w-7 h-7 border border-[#c8c2b8] flex items-center justify-center">
                 <span className="font-mono text-[9px] text-[#a09890]">{num}</span>
               </div>
-              {i < processSteps.length - 1 && (
+              {i < steps.length - 1 && (
                 <div className="flex-1 w-px bg-[#d5cfc5] mt-2 min-h-[40px]" />
               )}
             </div>
             <div className="flex flex-col gap-2 pt-1">
-              <p className="font-inter font-light text-[22px] text-[#1a1a1a] tracking-[-0.04em] leading-[1.1]">
-                {label}
-              </p>
+              <p className="font-inter font-light text-[22px] text-[#1a1a1a] tracking-[-0.04em] leading-[1.1]">{label}</p>
               <p className="font-inter font-normal text-[13px] text-[#888] leading-[1.7]">{description}</p>
             </div>
           </div>
@@ -334,7 +335,6 @@ function Start() {
   }, []);
 
   return (
-    // White — clean contrast before the black sticky footer
     <section ref={ref} className="w-full bg-white px-4 md:px-8 py-[80px] md:py-[120px]">
 
       <div data-start-item="" className="flex items-center justify-between mb-12 md:mb-16">
@@ -344,7 +344,6 @@ function Start() {
 
       <div className="flex flex-col md:flex-row md:gap-20 md:items-start">
 
-        {/* Expectations list */}
         <div className="flex-1 flex flex-col mb-12 md:mb-0">
           {expectations.map(({ label, detail }) => (
             <div key={label} data-start-item="" className="flex flex-col gap-1 py-6 border-b border-[#e8e8e8] first:border-t first:border-[#e8e8e8]">
@@ -356,7 +355,6 @@ function Start() {
           ))}
         </div>
 
-        {/* Headline + CTA */}
         <div data-start-item="" className="flex flex-col gap-8 md:w-[42%] md:shrink-0 md:pt-6">
           <p className="font-inter font-light text-[10vw] md:text-[4vw] text-[#1a1a1a] uppercase tracking-[-0.04em] leading-[0.88]">
             Ready to<br /><span className="font-playfair italic">begin?</span>
@@ -378,12 +376,20 @@ function Start() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function ServicesPage() {
+type Props = {
+  offerings?: Offering[];
+  processSteps?: ProcessStep[];
+};
+
+export default function ServicesPage({ offerings, processSteps }: Props) {
+  const activeOfferings  = offerings  ?? defaultOfferings;
+  const activeSteps      = processSteps ?? defaultProcessSteps;
+
   return (
     <>
-      <Hero />
-      <Offerings />
-      <Process />
+      <Hero offerings={activeOfferings} />
+      <Offerings offerings={activeOfferings} />
+      <Process steps={activeSteps} />
       <Start />
     </>
   );
