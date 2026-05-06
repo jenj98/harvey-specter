@@ -262,12 +262,11 @@ function Process() {
   }, []);
 
   return (
-    // Pure white — different from About's #f3f3f3 gray
-    <section ref={ref} className="w-full bg-white px-4 md:px-8 py-[80px] md:py-[120px]">
+    <section ref={ref} className="w-full bg-[#ebe6de] px-4 md:px-8 py-[80px] md:py-[120px]">
 
       <div data-process-header="" className="flex items-center justify-between mb-12 md:mb-16">
         <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">[ How We Work ]</p>
-        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">004</p>
+        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">003</p>
       </div>
 
       {/* Desktop: 4 equal columns with vertical dividers — no staircase, no dead space */}
@@ -278,7 +277,7 @@ function Process() {
             data-step=""
             className={[
               "flex-1 flex flex-col gap-5",
-              i > 0 ? "border-l border-[#e8e8e8] pl-8" : "",
+              i > 0 ? "border-l border-[#d5cfc5] pl-8" : "",
               i < processSteps.length - 1 ? "pr-8" : "",
             ].join(" ")}
           >
@@ -296,11 +295,11 @@ function Process() {
         {processSteps.map(({ num, label, description }, i) => (
           <div key={num} data-step="" className="flex gap-5 pb-10">
             <div className="flex flex-col items-center shrink-0">
-              <div className="w-7 h-7 border border-[#ddd] flex items-center justify-center">
-                <span className="font-mono text-[9px] text-[#bbb]">{num}</span>
+              <div className="w-7 h-7 border border-[#c8c2b8] flex items-center justify-center">
+                <span className="font-mono text-[9px] text-[#a09890]">{num}</span>
               </div>
               {i < processSteps.length - 1 && (
-                <div className="flex-1 w-px bg-[#e8e8e8] mt-2 min-h-[40px]" />
+                <div className="flex-1 w-px bg-[#d5cfc5] mt-2 min-h-[40px]" />
               )}
             </div>
             <div className="flex flex-col gap-2 pt-1">
@@ -335,12 +334,12 @@ function Start() {
   }, []);
 
   return (
-    // Warm stone — clearly distinct from footer black and from the cream above
-    <section ref={ref} className="w-full bg-[#ebe6de] px-4 md:px-8 py-[80px] md:py-[120px]">
+    // White — clean contrast before the black sticky footer
+    <section ref={ref} className="w-full bg-white px-4 md:px-8 py-[80px] md:py-[120px]">
 
       <div data-start-item="" className="flex items-center justify-between mb-12 md:mb-16">
         <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">[ Getting Started ]</p>
-        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">003</p>
+        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">004</p>
       </div>
 
       <div className="flex flex-col md:flex-row md:gap-20 md:items-start">
@@ -348,8 +347,8 @@ function Start() {
         {/* Expectations list */}
         <div className="flex-1 flex flex-col mb-12 md:mb-0">
           {expectations.map(({ label, detail }) => (
-            <div key={label} data-start-item="" className="flex flex-col gap-1 py-6 border-b border-[#d5cfc5] first:border-t first:border-[#d5cfc5]">
-              <p className="font-mono font-normal text-[11px] text-[#9e9890] uppercase">{label}</p>
+            <div key={label} data-start-item="" className="flex flex-col gap-1 py-6 border-b border-[#e8e8e8] first:border-t first:border-[#e8e8e8]">
+              <p className="font-mono font-normal text-[11px] text-[#aaa] uppercase">{label}</p>
               <p className="font-inter font-normal text-[14px] md:text-[15px] text-[#1a1a1a] leading-[1.5] tracking-[-0.02em]">
                 {detail}
               </p>
@@ -384,8 +383,8 @@ export default function ServicesPage() {
     <>
       <Hero />
       <Offerings />
-      <Start />
       <Process />
+      <Start />
     </>
   );
 }
