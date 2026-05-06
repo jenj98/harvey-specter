@@ -1,22 +1,40 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import FillButton from "@/components/FillButton";
 
-const navLinks = ["About", "Services", "Projects", "News", "Contact"];
+const navLinks = [
+  { label: "About",    href: "/about" },
+  { label: "Services", href: "#" },
+  { label: "Projects", href: "#" },
+  { label: "News",     href: "#" },
+  { label: "Contact",  href: "#" },
+];
 const MENU_ORIGIN = "92% 5%";
 const NAV_H = 80;
 
-function NavLink({ label, theme }: { label: string; theme: "light" | "dark" }) {
+function NavLink({ label, href, theme }: { label: string; href: string; theme: "light" | "dark" }) {
   const innerRef = useRef<HTMLSpanElement>(null);
+  const pathname = usePathname();
+  const isActive = href !== "#" && pathname === href;
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (isActive) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
-    <a
-      href="#"
+    <Link
+      href={href}
+      onClick={handleClick}
       className={`block font-inter font-semibold text-[16px] capitalize tracking-[-0.64px] whitespace-nowrap overflow-hidden h-[1em] transition-colors duration-300 ${
         theme === "dark" ? "text-white" : "text-black"
-      }`}
+      } ${isActive ? "opacity-50" : ""}`}
       onMouseEnter={() => gsap.to(innerRef.current, { yPercent: -50, duration: 0.45, ease: "power3.inOut" })}
       onMouseLeave={() => gsap.to(innerRef.current, { yPercent: 0, duration: 0.45, ease: "power3.inOut" })}
     >
@@ -24,7 +42,7 @@ function NavLink({ label, theme }: { label: string; theme: "light" | "dark" }) {
         <span className="block">{label}</span>
         <span className="block" aria-hidden="true">{label}</span>
       </span>
-    </a>
+    </Link>
   );
 }
 
@@ -42,6 +60,22 @@ export default function Navbar() {
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const hRef = useRef<HTMLSpanElement>(null);
   const studioRef = useRef<HTMLSpanElement>(null);
+
+  const updateTheme = useCallback(() => {
+    const darkEls = document.querySelectorAll("[data-nav-theme='dark']");
+    let isDark = false;
+    darkEls.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < NAV_H && rect.bottom > 0) isDark = true;
+    });
+    setTheme((prev) => {
+      const next = isDark ? "dark" : "light";
+      return prev === next ? prev : next;
+    });
+  }, []);
+
+  // Detect initial theme on mount (e.g. About page hero is dark from the start)
+  useEffect(() => { updateTheme(); }, [updateTheme]);
 
   // Entry animation
   useEffect(() => {
@@ -71,19 +105,6 @@ export default function Navbar() {
     let lastY = window.scrollY;
     let hidden = false;
 
-    const updateTheme = () => {
-      const darkEls = document.querySelectorAll("[data-nav-theme='dark']");
-      let isDark = false;
-      darkEls.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < NAV_H && rect.bottom > 0) isDark = true;
-      });
-      setTheme((prev) => {
-        const next = isDark ? "dark" : "light";
-        return prev === next ? prev : next;
-      });
-    };
-
     const onScroll = () => {
       const y = window.scrollY;
 
@@ -91,7 +112,7 @@ export default function Navbar() {
         hidden = false;
         gsap.to(wrapperRef.current, { y: 0, duration: 0.35, ease: "power3.out", overwrite: "auto" });
         gsap.to(backdropRef.current, { opacity: 0, duration: 0.3, overwrite: "auto" });
-        setTheme("light");
+        updateTheme();
         lastY = y;
         return;
       }
@@ -114,7 +135,7 @@ export default function Navbar() {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [updateTheme]);
 
   // Body scroll lock
   useEffect(() => {
@@ -176,8 +197,8 @@ export default function Navbar() {
 
         <ul ref={desktopUlRef} className="hidden md:flex items-center gap-[56px] list-none m-0 p-0">
           {navLinks.map((link) => (
-            <li key={link}>
-              <NavLink label={link} theme={theme} />
+            <li key={link.label}>
+              <NavLink label={link.label} href={link.href} theme={theme} />
             </li>
           ))}
         </ul>
@@ -225,10 +246,10 @@ export default function Navbar() {
         </div>
         <ul className="flex-1 flex flex-col items-center justify-center gap-1 list-none m-0 p-0">
           {navLinks.map((link, i) => (
-            <li key={link} ref={(el) => { menuItemsRef.current[i] = el; }}>
-              <a href="#" className="block font-inter font-light text-[42px] text-black capitalize tracking-[-2px] leading-[1.15]" onClick={() => setOpen(false)}>
-                {link}
-              </a>
+            <li key={link.label} ref={(el) => { menuItemsRef.current[i] = el; }}>
+              <Link href={link.href} className="block font-inter font-light text-[42px] text-black capitalize tracking-[-2px] leading-[1.15]" onClick={() => setOpen(false)}>
+                {link.label}
+              </Link>
             </li>
           ))}
         </ul>
