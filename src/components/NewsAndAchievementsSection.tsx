@@ -62,7 +62,7 @@ export default function NewsAndAchievementsSection() {
         <div className="flex items-end w-full">
 
           {/* Rotated title */}
-          <div className="self-stretch flex items-center justify-center shrink-0 w-[70px] min-[1440px]:w-[110px]">
+          <div className="self-stretch flex items-center justify-center shrink-0 w-[70px] min-[1440px]:w-[110px] overflow-hidden">
             <div className="-rotate-90 flex-none whitespace-nowrap">
               <p className="font-inter font-light text-[40px] min-[1440px]:text-[64px] text-black tracking-[-3.2px] min-[1440px]:tracking-[-5.12px] uppercase leading-[0.86]">
                 Keep up with my latest
