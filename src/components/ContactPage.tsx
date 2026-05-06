@@ -3,7 +3,6 @@
 import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useModal } from "@/components/LetsTalkModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -177,7 +176,6 @@ export default function ContactPage() {
   const ref        = useRef<HTMLElement>(null);
   const leftRef    = useRef<HTMLDivElement>(null);
   const rightRef   = useRef<HTMLDivElement>(null);
-  const { openModal } = useModal();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -187,9 +185,6 @@ export default function ContactPage() {
     });
     return () => ctx.revert();
   }, []);
-
-  // Suppress unused var warning — openModal is available for any inline CTA
-  void openModal;
 
   return (
     <>

@@ -3,14 +3,14 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRouter } from "next/navigation";
 import FillButton from "@/components/FillButton";
-import { useModal } from "@/components/LetsTalkModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
   const footerRef  = useRef<HTMLElement>(null);
-  const { openModal } = useModal();
+  const router = useRouter();
 
   useEffect(() => {
     const ctx = gsap.context((self) => {
@@ -68,7 +68,7 @@ export default function Footer() {
                 fillColor="bg-white"
                 textColor="white"
                 hoverTextColor="black"
-                onClick={openModal}
+                onClick={() => router.push("/contact")}
               >
                 Let&apos;s Talk
               </FillButton>
@@ -137,7 +137,7 @@ export default function Footer() {
                 fillColor="bg-white"
                 textColor="white"
                 hoverTextColor="black"
-                onClick={openModal}
+                onClick={() => router.push("/contact")}
               >
                 Let&apos;s Talk
               </FillButton>
