@@ -72,27 +72,26 @@ function Hero() {
   return (
     <section
       ref={ref}
-      data-nav-theme="dark"
-      className="relative w-full h-[48vh] min-h-[320px] bg-black flex flex-col px-4 md:px-8 pt-24 pb-10 md:pt-[100px] md:pb-14 overflow-hidden"
+      className="relative w-full h-[48vh] min-h-[320px] bg-white flex flex-col px-4 md:px-8 pt-24 pb-10 md:pt-[100px] md:pb-14 overflow-hidden"
     >
-      <span aria-hidden className="absolute right-0 bottom-[-1vw] font-inter font-black text-[26vw] text-white/[0.03] uppercase leading-none select-none pointer-events-none tracking-[-0.05em]">
+      <span aria-hidden className="absolute right-0 bottom-[-1vw] font-inter font-black text-[26vw] text-black/[0.03] uppercase leading-none select-none pointer-events-none tracking-[-0.05em]">
         News
       </span>
 
       <div data-label="" className="flex items-center justify-between">
-        <p className="font-mono text-[11px] md:text-[12px] text-white/50 uppercase tracking-[0.1em]">[ News &amp; Achievements ]</p>
-        <p className="font-mono text-[11px] md:text-[12px] text-white/50 uppercase tracking-[0.1em]">2024 – 2025</p>
+        <p className="font-mono text-[11px] md:text-[12px] text-black/40 uppercase tracking-[0.1em]">[ News &amp; Achievements ]</p>
+        <p className="font-mono text-[11px] md:text-[12px] text-black/40 uppercase tracking-[0.1em]">2024 – 2025</p>
       </div>
 
       <div className="flex-1 flex flex-col justify-end">
-        <h1 data-title="" className="font-inter font-light text-white uppercase tracking-[-0.04em] leading-[0.88]" style={{ fontSize: "clamp(48px, 8.5vw, 120px)" }}>
+        <h1 data-title="" className="font-inter font-light text-black uppercase tracking-[-0.04em] leading-[0.88]" style={{ fontSize: "clamp(48px, 8.5vw, 120px)" }}>
           Latest<br />Stories
         </h1>
       </div>
 
       <div data-sub="" className="flex items-center justify-between mt-5">
-        <p className="font-mono text-[11px] md:text-[12px] text-white/35 uppercase tracking-[0.08em]">H.Studio</p>
-        <p className="font-mono text-[11px] md:text-[12px] text-white/35 uppercase tracking-[0.08em]">{articles.length} articles</p>
+        <p className="font-mono text-[11px] md:text-[12px] text-black/30 uppercase tracking-[0.08em]">H.Studio</p>
+        <p className="font-mono text-[11px] md:text-[12px] text-black/30 uppercase tracking-[0.08em]">{articles.length} articles</p>
       </div>
     </section>
   );
