@@ -66,17 +66,17 @@ function ContactForm() {
 
   if (sent) {
     return (
-      <div className="flex flex-col gap-6 justify-center h-full py-20">
-        <span className="font-mono text-[11px] text-black/35 uppercase tracking-[0.1em]">Message received</span>
+      <div className="flex flex-col gap-6 justify-center h-full py-16">
+        <span className="font-mono text-[11px] text-black/50 uppercase tracking-[0.1em]">Message received</span>
         <p className="font-inter font-light text-[42px] md:text-[56px] text-black tracking-[-0.04em] leading-[1.0] uppercase">
           Talk soon.
         </p>
-        <p className="font-inter text-[14px] text-black/50 leading-[1.75] max-w-[360px]">
+        <p className="font-inter text-[14px] text-black/60 leading-[1.75] max-w-[360px]">
           I&apos;ll review your brief and be in touch within 1–2 business days.
         </p>
         <button
           onClick={() => setSent(false)}
-          className="self-start font-mono text-[11px] text-black/40 uppercase tracking-[0.1em] border-b border-black/20 pb-[2px] hover:text-black hover:border-black transition-colors mt-2"
+          className="self-start font-mono text-[11px] text-black/50 uppercase tracking-[0.1em] border-b border-black/30 pb-[2px] hover:text-black hover:border-black transition-colors mt-2"
         >
           Send another
         </button>
@@ -85,53 +85,43 @@ function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8 py-10 md:py-0">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5 py-10 md:py-0">
 
       {/* Name + Email */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="flex flex-col gap-2">
-          <label className="font-mono text-[10px] text-black/35 uppercase tracking-[0.08em]">Full Name</label>
+        <div className="flex flex-col gap-1.5">
+          <label className="font-mono text-[10px] text-black/60 uppercase tracking-[0.08em]">Full Name</label>
           <input
             required
             type="text"
             placeholder="Jane Smith"
-            className="font-inter text-[14px] text-black bg-transparent border-b border-black/20 pb-3 focus:outline-none focus:border-black transition-colors placeholder:text-black/20"
+            className="font-inter text-[14px] text-black bg-transparent border-b border-black/30 pb-2.5 focus:outline-none focus:border-black transition-colors placeholder:text-black/35"
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <label className="font-mono text-[10px] text-black/35 uppercase tracking-[0.08em]">Email</label>
+        <div className="flex flex-col gap-1.5">
+          <label className="font-mono text-[10px] text-black/60 uppercase tracking-[0.08em]">Email</label>
           <input
             required
             type="email"
             placeholder="jane@company.com"
-            className="font-inter text-[14px] text-black bg-transparent border-b border-black/20 pb-3 focus:outline-none focus:border-black transition-colors placeholder:text-black/20"
+            className="font-inter text-[14px] text-black bg-transparent border-b border-black/30 pb-2.5 focus:outline-none focus:border-black transition-colors placeholder:text-black/35"
           />
         </div>
       </div>
 
-      {/* Company */}
-      <div className="flex flex-col gap-2">
-        <label className="font-mono text-[10px] text-black/35 uppercase tracking-[0.08em]">Company / Brand (optional)</label>
-        <input
-          type="text"
-          placeholder="Acme Inc."
-          className="font-inter text-[14px] text-black bg-transparent border-b border-black/20 pb-3 focus:outline-none focus:border-black transition-colors placeholder:text-black/20"
-        />
-      </div>
-
       {/* Project type */}
-      <div className="flex flex-col gap-3">
-        <label className="font-mono text-[10px] text-black/35 uppercase tracking-[0.08em]">I&apos;m looking for</label>
+      <div className="flex flex-col gap-2">
+        <label className="font-mono text-[10px] text-black/60 uppercase tracking-[0.08em]">I&apos;m looking for</label>
         <div className="flex flex-wrap gap-2">
           {PROJECT_TYPES.map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => setProjectType(t === projectType ? "" : t)}
-              className={`font-mono text-[10px] uppercase tracking-[0.06em] px-3 py-[7px] border rounded-[2px] transition-all duration-200 ${
+              className={`font-mono text-[10px] uppercase tracking-[0.06em] px-3 py-[6px] border rounded-[2px] transition-all duration-200 ${
                 projectType === t
                   ? "bg-black text-white border-black"
-                  : "text-black/45 border-black/15 hover:border-black/50 hover:text-black"
+                  : "text-black/60 border-black/25 hover:border-black/60 hover:text-black"
               }`}
             >
               {t}
@@ -141,18 +131,18 @@ function ContactForm() {
       </div>
 
       {/* Budget */}
-      <div className="flex flex-col gap-3">
-        <label className="font-mono text-[10px] text-black/35 uppercase tracking-[0.08em]">Budget range</label>
+      <div className="flex flex-col gap-2">
+        <label className="font-mono text-[10px] text-black/60 uppercase tracking-[0.08em]">Budget range</label>
         <div className="flex flex-wrap gap-2">
           {BUDGETS.map((b) => (
             <button
               key={b}
               type="button"
               onClick={() => setBudget(b === budget ? "" : b)}
-              className={`font-mono text-[10px] uppercase tracking-[0.06em] px-3 py-[7px] border rounded-[2px] transition-all duration-200 ${
+              className={`font-mono text-[10px] uppercase tracking-[0.06em] px-3 py-[6px] border rounded-[2px] transition-all duration-200 ${
                 budget === b
                   ? "bg-black text-white border-black"
-                  : "text-black/45 border-black/15 hover:border-black/50 hover:text-black"
+                  : "text-black/60 border-black/25 hover:border-black/60 hover:text-black"
               }`}
             >
               {b}
@@ -161,29 +151,19 @@ function ContactForm() {
         </div>
       </div>
 
-      {/* Timeline */}
-      <div className="flex flex-col gap-2">
-        <label className="font-mono text-[10px] text-black/35 uppercase tracking-[0.08em]">Ideal start date</label>
-        <input
-          type="text"
-          placeholder="e.g. July 2025, ASAP, Flexible"
-          className="font-inter text-[14px] text-black bg-transparent border-b border-black/20 pb-3 focus:outline-none focus:border-black transition-colors placeholder:text-black/20"
-        />
-      </div>
-
       {/* Message */}
-      <div className="flex flex-col gap-2">
-        <label className="font-mono text-[10px] text-black/35 uppercase tracking-[0.08em]">Tell me about your project</label>
+      <div className="flex flex-col gap-1.5">
+        <label className="font-mono text-[10px] text-black/60 uppercase tracking-[0.08em]">Tell me about your project</label>
         <textarea
-          rows={5}
-          placeholder="What are you building, what does success look like, and anything else I should know?"
-          className="font-inter text-[14px] text-black bg-transparent border-b border-black/20 pb-3 focus:outline-none focus:border-black transition-colors placeholder:text-black/20 resize-none leading-[1.75]"
+          rows={3}
+          placeholder="What are you building, and what does success look like?"
+          className="font-inter text-[14px] text-black bg-transparent border-b border-black/30 pb-2.5 focus:outline-none focus:border-black transition-colors placeholder:text-black/35 resize-none leading-[1.7]"
         />
       </div>
 
       <button
         type="submit"
-        className="self-start bg-black text-white font-inter font-medium text-[14px] tracking-[-0.02em] px-8 py-4 rounded-[24px] hover:bg-black/80 transition-colors"
+        className="self-start bg-black text-white font-inter font-medium text-[14px] tracking-[-0.02em] px-8 py-4 rounded-[24px] hover:bg-black/80 transition-colors mt-1"
       >
         Send message →
       </button>
