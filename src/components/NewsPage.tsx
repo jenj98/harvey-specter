@@ -6,34 +6,16 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 
-const articles = [
-  {
-    num: "01",
-    category: "Feature",
-    date: "April 2025",
-    headline: "The Visual Grammar of a Brand",
-    body: "What separates a logo from an identity? H.Studio breaks down the invisible rules that make great brands instantly recognisable — and why most get it wrong from the start.",
-    image: "/news-1.webp",
-  },
-  {
-    num: "02",
-    category: "Process",
-    date: "February 2025",
-    headline: "Shooting with Intent",
-    body: "Every frame is a decision. A behind-the-scenes look at how art direction shapes commercial photography and why the brief matters as much as the shutter.",
-    image: "/news-2.webp",
-  },
-  {
-    num: "03",
-    category: "Perspective",
-    date: "December 2024",
-    headline: "Why Less is Still More",
-    body: "In a landscape of maximum stimulation, restraint has become the rarest creative skill. A case for considered work in an age of endless output.",
-    image: "/news-3.webp",
-  },
-];
+export type NewsArticle = {
+  num: string;
+  category: string;
+  date: string;
+  headline: string;
+  body: string;
+  image: string;
+};
 
 const achievements = [
   { year: "2025", title: "Cannes Lions — Silver, Brand Experience" },
@@ -55,7 +37,7 @@ function Arrow() {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
-function Hero() {
+function Hero({ articleCount }: { articleCount: number }) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -91,7 +73,7 @@ function Hero() {
 
       <div data-sub="" className="flex items-center justify-between mt-5">
         <p className="font-mono text-[11px] md:text-[12px] text-black/30 uppercase tracking-[0.08em]">H.Studio</p>
-        <p className="font-mono text-[11px] md:text-[12px] text-black/30 uppercase tracking-[0.08em]">{articles.length} articles</p>
+        <p className="font-mono text-[11px] md:text-[12px] text-black/30 uppercase tracking-[0.08em]">{articleCount} articles</p>
       </div>
     </section>
   );
@@ -99,7 +81,7 @@ function Hero() {
 
 // ─── Articles ─────────────────────────────────────────────────────────────────
 
-function ArticleCard({ article }: { article: typeof articles[0] }) {
+function ArticleCard({ article }: { article: NewsArticle }) {
   const imgRef  = useRef<HTMLImageElement>(null);
   const linkRef = useRef<HTMLSpanElement>(null);
 
@@ -140,7 +122,7 @@ function ArticleCard({ article }: { article: typeof articles[0] }) {
   );
 }
 
-function Articles() {
+function Articles({ articles }: { articles: NewsArticle[] }) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -230,11 +212,11 @@ function Achievements() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function NewsPage() {
+export default function NewsPage({ articles }: { articles: NewsArticle[] }) {
   return (
     <>
-      <Hero />
-      <Articles />
+      <Hero articleCount={articles.length} />
+      <Articles articles={articles} />
       <Achievements />
     </>
   );
