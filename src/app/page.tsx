@@ -12,16 +12,23 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
-      <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <AboutSection2 />
-      <div data-nav-theme="dark"><PhotoSection /></div>
-      <div data-nav-theme="dark"><DeliverablesSection /></div>
-      <SelectedWorkSection />
-      <TestimonialsSection />
-      <NewsAndAchievementsSection />
-      <div data-nav-theme="dark"><Footer /></div>
+      {/* Content sits above the sticky footer (z-10 covers it while overlapping) */}
+      <div className="relative z-10">
+        <Navbar />
+        <HeroSection />
+        <AboutSection />
+        <AboutSection2 />
+        <div data-nav-theme="dark"><PhotoSection /></div>
+        <div data-nav-theme="dark"><DeliverablesSection /></div>
+        <SelectedWorkSection />
+        <TestimonialsSection />
+        <NewsAndAchievementsSection />
+      </div>
+
+      {/* Footer is sticky at the bottom — content scrolls over it, revealing it */}
+      <div className="sticky bottom-0 z-0" data-nav-theme="dark">
+        <Footer />
+      </div>
     </>
   );
 }
