@@ -1,3 +1,11 @@
+"use client";
+
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 const testimonials = [
   {
     id: 2,
@@ -8,6 +16,8 @@ const testimonials = [
     mobileRotation: "-rotate-[3.5deg]",
     pos: { left: "102.021px", top: "142.02px" },
     zClass: "z-20",
+    from: { x: -90, y: -110, scale: 0.82 },
+    timelinePos: 0,
   },
   {
     id: 1,
@@ -18,6 +28,8 @@ const testimonials = [
     mobileRotation: "rotate-[1.5deg]",
     pos: { right: "402.042px", top: "272px" },
     zClass: "z-0",
+    from: { x: 90, y: -90, scale: 0.82 },
+    timelinePos: 0.18,
   },
   {
     id: 3,
@@ -28,6 +40,8 @@ const testimonials = [
     mobileRotation: "rotate-[1deg]",
     pos: { left: "305.004px", bottom: "153.684px" },
     zClass: "z-20",
+    from: { x: -70, y: 110, scale: 0.82 },
+    timelinePos: 0.34,
   },
   {
     id: 4,
@@ -38,6 +52,8 @@ const testimonials = [
     mobileRotation: "rotate-2",
     pos: { right: "86.234px", bottom: "212.832px" },
     zClass: "z-20",
+    from: { x: 90, y: 110, scale: 0.82 },
+    timelinePos: 0.5,
   },
 ];
 
@@ -62,18 +78,104 @@ function TestimonialCard({ text, name, logo, rotation, className = "" }: {
 }
 
 export default function TestimonialsSection() {
+  const desktopRef = useRef<HTMLElement>(null);
+  const mobileRef  = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // ── Desktop ─────────────────────────────────────────────────────────
+    const desktopCtx = gsap.context((self) => {
+      const q = self.selector!;
+      const cards = q("[data-card]") as HTMLElement[];
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: desktopRef.current,
+          start: "top 85%",
+          end: "center 45%",
+          scrub: 1.5,
+        },
+      });
+
+      // Title enters first
+      tl.fromTo(
+        q("[data-title]"),
+        { opacity: 0, scale: 0.9, y: 30 },
+        { opacity: 1, scale: 1, y: 0, ease: "power2.out", duration: 1 },
+        0
+      );
+
+      // Cards enter at staggered positions in the timeline
+      cards.forEach((card, i) => {
+        const t = testimonials[i];
+        tl.fromTo(
+          card,
+          { x: t.from.x, y: t.from.y, scale: t.from.scale, opacity: 0 },
+          { x: 0, y: 0, scale: 1, opacity: 1, ease: "power2.out", duration: 1.2 },
+          t.timelinePos
+        );
+      });
+    }, desktopRef);
+
+    // ── Mobile / tablet ─────────────────────────────────────────────────
+    const mobileCtx = gsap.context((self) => {
+      const q = self.selector!;
+
+      gsap.fromTo(
+        q("[data-mobile-title]"),
+        { opacity: 0, y: 28 },
+        {
+          opacity: 1, y: 0,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: mobileRef.current,
+            start: "top 88%",
+            end: "top 55%",
+            scrub: 1.5,
+          },
+        }
+      );
+
+      gsap.fromTo(
+        q("[data-mobile-card]"),
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1, y: 0,
+          stagger: 0.12,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: mobileRef.current,
+            start: "top 82%",
+            end: "top 30%",
+            scrub: 1.5,
+          },
+        }
+      );
+    }, mobileRef);
+
+    return () => {
+      desktopCtx.revert();
+      mobileCtx.revert();
+    };
+  }, []);
+
   return (
     <>
       {/* ── Desktop: scattered card layout ──────────────────────────── */}
-      <section className="hidden min-[1440px]:flex relative w-full bg-white overflow-hidden min-h-[960px] items-center justify-center px-8 py-[120px]">
-        {/* Big centred title — z-10; Lukas (z-0) goes behind it, others (z-20) go in front */}
-        <p className="font-inter font-medium text-[198px] text-black text-center tracking-[-13.86px] leading-[1.1] capitalize select-none relative z-10">
+      <section
+        ref={desktopRef}
+        className="hidden min-[1440px]:flex relative w-full bg-white overflow-hidden min-h-[960px] items-center justify-center px-8 py-[120px]"
+      >
+        <p
+          data-title=""
+          className="font-inter font-medium text-[198px] text-black text-center tracking-[-13.86px] leading-[1.1] capitalize select-none relative z-10"
+        >
           Testimonials
         </p>
-        {/* Absolutely scattered cards */}
+
         {testimonials.map((t) => (
           <div
             key={t.id}
+            data-card=""
             className={`absolute ${t.zClass}`}
             style={t.pos}
           >
@@ -88,19 +190,25 @@ export default function TestimonialsSection() {
         ))}
       </section>
 
-      {/* ── Mobile: title + horizontal swipe row ─────────────────────── */}
-      <section className="min-[1440px]:hidden w-full bg-white py-16 flex flex-col gap-8">
-        <p className="font-inter font-medium text-[64px] text-black text-center tracking-[-4.48px] leading-[0.8] capitalize px-4">
+      {/* ── Mobile / tablet: title + horizontal swipe row ────────────── */}
+      <section
+        ref={mobileRef}
+        className="min-[1440px]:hidden w-full bg-white py-16 flex flex-col gap-8"
+      >
+        <p
+          data-mobile-title=""
+          className="font-inter font-medium text-[64px] text-black text-center tracking-[-4.48px] leading-[0.8] capitalize px-4"
+        >
           Testimonials
         </p>
-        {/* Swipeable row — snap to each card */}
-        {/*
-          < 1108px : mobile-style scroll (snap + 16px left padding)
-          ≥ 1108px : all 4 cards (4×277=1108px) fit; disable scroll/snap, center the row
-        */}
+
         <div className="no-scrollbar flex overflow-x-auto snap-x snap-mandatory pl-4 py-4 scroll-px-4 min-[1108px]:overflow-x-visible min-[1108px]:snap-none min-[1108px]:justify-center min-[1108px]:pl-0 min-[1108px]:scroll-px-0">
           {testimonials.map((t, index) => (
-            <div key={t.id} className={`${index === testimonials.length - 1 ? 'snap-end' : 'snap-start'} min-[1108px]:snap-none shrink-0 w-[277px] flex items-center justify-center`}>
+            <div
+              key={t.id}
+              data-mobile-card=""
+              className={`${index === testimonials.length - 1 ? 'snap-end' : 'snap-start'} min-[1108px]:snap-none shrink-0 w-[277px] flex items-center justify-center`}
+            >
               <TestimonialCard
                 text={t.text}
                 name={t.name}
