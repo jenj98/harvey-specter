@@ -3,15 +3,15 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import FillButton from "@/components/FillButton";
 
 const navLinks = [
   { label: "About",    href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Projects", href: "/projects" },
-  { label: "News",     href: "#" },
-  { label: "Contact",  href: "#" },
+  { label: "News",     href: "/news" },
+  { label: "Contact",  href: "/contact" },
 ];
 const MENU_ORIGIN = "92% 5%";
 const NAV_H = 80;
@@ -49,6 +49,7 @@ function NavLink({ label, href, theme }: { label: string; href: string; theme: "
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const router = useRouter();
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -212,8 +213,9 @@ export default function Navbar() {
             }`}
             fillColor="bg-white"
             hoverTextColor="black"
+            onClick={() => router.push("/contact")}
           >
-            Let&apos;s talk
+            Let&apos;s Talk
           </FillButton>
         </div>
 
@@ -256,7 +258,7 @@ export default function Navbar() {
         <div className="px-4 pb-12 flex justify-center">
           <button
             className="relative overflow-hidden btn-shimmer bg-black text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-8 py-4 rounded-[24px]"
-            onClick={() => setOpen(false)}
+            onClick={() => { setOpen(false); router.push("/contact"); }}
           >
             <span className="relative">Let&apos;s talk</span>
           </button>

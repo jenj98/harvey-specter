@@ -3,12 +3,14 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRouter } from "next/navigation";
 import FillButton from "@/components/FillButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
-  const footerRef = useRef<HTMLElement>(null);
+  const footerRef  = useRef<HTMLElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const ctx = gsap.context((self) => {
@@ -66,8 +68,9 @@ export default function Footer() {
                 fillColor="bg-white"
                 textColor="white"
                 hoverTextColor="black"
+                onClick={() => router.push("/contact")}
               >
-                Let&apos;s talk
+                Let&apos;s Talk
               </FillButton>
             </div>
 
@@ -134,8 +137,9 @@ export default function Footer() {
                 fillColor="bg-white"
                 textColor="white"
                 hoverTextColor="black"
+                onClick={() => router.push("/contact")}
               >
-                Let&apos;s talk
+                Let&apos;s Talk
               </FillButton>
             </div>
 

@@ -6,14 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const description =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-const articles = [
-  { image: "/news-1.webp", text: description },
-  { image: "/news-2.webp", text: description },
-  { image: "/news-3.webp", text: description },
-];
+export type NewsArticlePreview = { image: string; body: string };
 
 function ArrowIcon() {
   return (
@@ -105,7 +98,7 @@ function MobileNewsCard({ image, text }: { image: string; text: string }) {
   );
 }
 
-export default function NewsAndAchievementsSection() {
+export default function NewsAndAchievementsSection({ articles }: { articles: NewsArticlePreview[] }) {
   const desktopRef = useRef<HTMLElement>(null);
   const mobileRef  = useRef<HTMLElement>(null);
 
@@ -179,17 +172,14 @@ export default function NewsAndAchievementsSection() {
 
           {/* Three cards with dividers */}
           <div className="flex flex-1 items-start gap-5 min-[1440px]:gap-[31px] ml-6 min-[1440px]:ml-8">
-            <div data-card="" className="flex-1 min-w-0">
-              <NewsCard image="/news-1.webp" text={articles[0].text} />
-            </div>
-            <div className="w-px self-stretch bg-[#cccccc]" />
-            <div data-card="" className="flex-1 min-w-0">
-              <NewsCard image="/news-2.webp" text={articles[1].text} offsetTop />
-            </div>
-            <div className="w-px self-stretch bg-[#cccccc]" />
-            <div data-card="" className="flex-1 min-w-0">
-              <NewsCard image="/news-3.webp" text={articles[2].text} />
-            </div>
+            {articles.map((article, i) => (
+              <>
+                {i > 0 && <div key={`div-${i}`} className="w-px self-stretch bg-[#cccccc]" />}
+                <div key={i} data-card="" className="flex-1 min-w-0">
+                  <NewsCard image={article.image} text={article.body} offsetTop={i === 1} />
+                </div>
+              </>
+            ))}
           </div>
 
         </div>
@@ -210,7 +200,7 @@ export default function NewsAndAchievementsSection() {
                 data-mobile-card=""
                 className={`${index === articles.length - 1 ? "snap-end" : "snap-start"} shrink-0 w-[316px]`}
               >
-                <MobileNewsCard image={article.image} text={article.text} />
+                <MobileNewsCard image={article.image} text={article.body} />
               </div>
             ))}
             <div className="shrink-0 w-4" />
