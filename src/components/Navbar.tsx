@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import FillButton from "@/components/FillButton";
 
 const navLinks = [
@@ -17,12 +18,23 @@ const NAV_H = 80;
 
 function NavLink({ label, href, theme }: { label: string; href: string; theme: "light" | "dark" }) {
   const innerRef = useRef<HTMLSpanElement>(null);
+  const pathname = usePathname();
+  const isActive = href !== "#" && pathname === href;
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (isActive) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <Link
       href={href}
+      onClick={handleClick}
       className={`block font-inter font-semibold text-[16px] capitalize tracking-[-0.64px] whitespace-nowrap overflow-hidden h-[1em] transition-colors duration-300 ${
         theme === "dark" ? "text-white" : "text-black"
-      }`}
+      } ${isActive ? "opacity-50" : ""}`}
       onMouseEnter={() => gsap.to(innerRef.current, { yPercent: -50, duration: 0.45, ease: "power3.inOut" })}
       onMouseLeave={() => gsap.to(innerRef.current, { yPercent: 0, duration: 0.45, ease: "power3.inOut" })}
     >
