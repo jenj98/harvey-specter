@@ -100,7 +100,7 @@ function Hero() {
 
 // ─── Articles ─────────────────────────────────────────────────────────────────
 
-function ArticleCard({ article, large = false }: { article: typeof articles[0]; large?: boolean }) {
+function ArticleCard({ article }: { article: typeof articles[0] }) {
   const imgRef  = useRef<HTMLImageElement>(null);
   const linkRef = useRef<HTMLSpanElement>(null);
 
@@ -116,11 +116,11 @@ function ArticleCard({ article, large = false }: { article: typeof articles[0]; 
   return (
     <div
       data-article=""
-      className="flex flex-col gap-5 cursor-pointer group"
+      className="flex flex-col gap-5 cursor-pointer"
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
-      <div className={`overflow-hidden w-full ${large ? "aspect-[3/2]" : "aspect-[4/3]"}`}>
+      <div className="overflow-hidden w-full aspect-[4/3]">
         <img ref={imgRef} src={article.image} alt={article.headline} className="w-full h-full object-cover" />
       </div>
       <div className="flex flex-col gap-3">
@@ -129,7 +129,7 @@ function ArticleCard({ article, large = false }: { article: typeof articles[0]; 
           <span className="w-px h-3 bg-black/15" />
           <span className="font-mono text-[10px] text-black/35 uppercase tracking-[0.08em]">{article.date}</span>
         </div>
-        <h2 className={`font-inter font-light text-black tracking-[-0.04em] leading-[1.05] ${large ? "text-[28px] md:text-[38px]" : "text-[20px] md:text-[24px]"}`}>
+        <h2 className="font-inter font-light text-[20px] md:text-[24px] text-black tracking-[-0.04em] leading-[1.05]">
           {article.headline}
         </h2>
         <p className="font-inter text-[13px] text-black/50 leading-[1.75]">{article.body}</p>
@@ -163,17 +163,11 @@ function Articles() {
         <p className="font-mono text-[11px] md:text-[12px] text-black/35 uppercase tracking-[0.08em]">002</p>
       </div>
 
-      {/* Desktop: featured left + stack right */}
-      <div className="hidden md:grid md:grid-cols-[1fr_1px_1fr] gap-0">
-        <div className="pr-10">
-          <ArticleCard article={articles[0]} large />
-        </div>
-        <div className="bg-black/[0.06]" />
-        <div className="pl-10 flex flex-col gap-10 justify-between">
-          <ArticleCard article={articles[1]} />
-          <div className="border-t border-black/[0.06]" />
-          <ArticleCard article={articles[2]} />
-        </div>
+      {/* Uniform 3-column grid on desktop */}
+      <div className="hidden md:grid md:grid-cols-3 gap-8 lg:gap-12">
+        {articles.map((a) => (
+          <ArticleCard key={a.num} article={a} />
+        ))}
       </div>
 
       {/* Mobile: stacked */}
