@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import Link from "next/link";
 import FillButton from "@/components/FillButton";
@@ -49,6 +49,22 @@ export default function Navbar() {
   const hRef = useRef<HTMLSpanElement>(null);
   const studioRef = useRef<HTMLSpanElement>(null);
 
+  const updateTheme = useCallback(() => {
+    const darkEls = document.querySelectorAll("[data-nav-theme='dark']");
+    let isDark = false;
+    darkEls.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < NAV_H && rect.bottom > 0) isDark = true;
+    });
+    setTheme((prev) => {
+      const next = isDark ? "dark" : "light";
+      return prev === next ? prev : next;
+    });
+  }, []);
+
+  // Detect initial theme on mount (e.g. About page hero is dark from the start)
+  useEffect(() => { updateTheme(); }, [updateTheme]);
+
   // Entry animation
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
@@ -77,19 +93,6 @@ export default function Navbar() {
     let lastY = window.scrollY;
     let hidden = false;
 
-    const updateTheme = () => {
-      const darkEls = document.querySelectorAll("[data-nav-theme='dark']");
-      let isDark = false;
-      darkEls.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < NAV_H && rect.bottom > 0) isDark = true;
-      });
-      setTheme((prev) => {
-        const next = isDark ? "dark" : "light";
-        return prev === next ? prev : next;
-      });
-    };
-
     const onScroll = () => {
       const y = window.scrollY;
 
@@ -97,7 +100,7 @@ export default function Navbar() {
         hidden = false;
         gsap.to(wrapperRef.current, { y: 0, duration: 0.35, ease: "power3.out", overwrite: "auto" });
         gsap.to(backdropRef.current, { opacity: 0, duration: 0.3, overwrite: "auto" });
-        setTheme("light");
+        updateTheme();
         lastY = y;
         return;
       }
@@ -120,7 +123,7 @@ export default function Navbar() {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [updateTheme]);
 
   // Body scroll lock
   useEffect(() => {

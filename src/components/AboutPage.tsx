@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import FillButton from "@/components/FillButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -58,8 +57,9 @@ function Hero() {
         </div>
       </div>
 
-      {/* Desktop: name with portrait overlay */}
+      {/* Desktop: portrait sandwiched between Harvey (behind) and Specter (in front) */}
       <div className="hidden md:flex flex-col flex-1 justify-center relative py-6">
+        {/* Harvey sits behind the portrait */}
         <p
           data-hero-n1=""
           className="font-inter font-light text-white uppercase leading-[0.85] tracking-[-0.04em] relative z-10"
@@ -68,9 +68,10 @@ function Hero() {
           Harvey
         </p>
 
+        {/* Portrait sits between the two name lines */}
         <div
           data-hero-portrait=""
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-[32vw] max-w-[400px] z-20"
+          className="absolute right-[6vw] top-1/2 -translate-y-1/2 w-[28vw] max-w-[360px] z-20"
           style={{ perspective: "1000px" }}
         >
           <img
@@ -81,9 +82,10 @@ function Hero() {
           />
         </div>
 
+        {/* Specter sits in front of the portrait — editorial overlap */}
         <p
           data-hero-n2=""
-          className="font-inter font-light text-white uppercase leading-[0.85] tracking-[-0.04em] text-right relative z-10"
+          className="font-inter font-light text-white uppercase leading-[0.85] tracking-[-0.04em] text-right relative z-30"
           style={{ fontSize: "clamp(72px, 15vw, 220px)" }}
         >
           Specter
@@ -132,7 +134,6 @@ function Story() {
           scrollTrigger: { trigger: q("[data-story-stats]")[0], start: "top 88%", end: "top 60%", scrub: 1.5 } }
       );
 
-      // Count-up on stat numbers
       (Array.from(q("[data-counter]")) as HTMLElement[]).forEach((el) => {
         const target = parseInt(el.dataset.target ?? "0");
         const counter = { val: 0 };
@@ -180,14 +181,14 @@ function Story() {
           style={{ perspective: "1000px" }}
         >
           <img
-            src="/about-portrait.jpg"
-            alt="Harvey Specter"
-            className="w-full aspect-[422/594] object-cover object-top"
+            src="/photo-desktop.webp"
+            alt="Harvey Specter at work"
+            className="w-full aspect-[422/594] object-cover object-center"
           />
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats — centered */}
       <div
         data-story-stats=""
         className="grid grid-cols-3 gap-4 mt-16 md:mt-20 border-t border-[#e0e0e0] pt-10"
@@ -197,7 +198,7 @@ function Story() {
           { value: 100, label: "Projects completed" },
           { value: 50,  label: "Brands elevated" },
         ] as const).map(({ value, label }) => (
-          <div key={label} className="flex flex-col gap-2">
+          <div key={label} className="flex flex-col gap-2 items-center text-center">
             <span
               data-counter=""
               data-target={value}
@@ -270,51 +271,109 @@ function Philosophy() {
   );
 }
 
-// ─── CTA ─────────────────────────────────────────────────────────────────────
+// ─── Beyond ───────────────────────────────────────────────────────────────────
 
-function Cta() {
+const frames = [
+  { src: "/selected-1.webp", label: "Film Photography", sub: "35mm — NYC Streets" },
+  { src: "/selected-2.webp", label: "Architecture",     sub: "Brutalism to Minimal" },
+  { src: "/selected-3.webp", label: "Jazz & Vinyl",     sub: "Blue Note Era — Now" },
+  { src: "/selected-4.webp", label: "Contemporary Art", sub: "Canvas to Code" },
+] as const;
+
+const interests = ["Architecture", "Fine Dining", "Vinyl Collecting", "Street Photography", "Contemporary Film"] as const;
+
+function Beyond() {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context((self) => {
       const q = self.selector!;
-      gsap.fromTo(q("[data-cta]"),
+
+      gsap.fromTo(q("[data-beyond-header]"),
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, ease: "power2.out",
+          scrollTrigger: { trigger: ref.current, start: "top 84%", end: "top 55%", scrub: 1.5 } }
+      );
+
+      gsap.fromTo(q("[data-beyond-headline]"),
         { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, stagger: 0.12, ease: "power3.out",
-          scrollTrigger: { trigger: ref.current, start: "top 82%", end: "top 42%", scrub: 1.5 },
-        }
+        { opacity: 1, y: 0, stagger: 0.1, ease: "power2.out",
+          scrollTrigger: { trigger: ref.current, start: "top 80%", end: "top 48%", scrub: 1.5 } }
+      );
+
+      gsap.fromTo(q("[data-beyond-photo]"),
+        { opacity: 0, y: 70, scale: 0.92 },
+        { opacity: 1, y: 0, scale: 1, stagger: 0.09,
+          scrollTrigger: { trigger: ref.current, start: "top 74%", end: "center 50%", scrub: 1.5 } }
+      );
+
+      gsap.fromTo(q("[data-beyond-tag]"),
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, stagger: 0.08,
+          scrollTrigger: { trigger: ref.current, start: "top 70%", end: "center 44%", scrub: 1.5 } }
+      );
+
+      gsap.fromTo(q("[data-beyond-interest]"),
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, stagger: 0.1,
+          scrollTrigger: { trigger: q("[data-beyond-interest]")[0], start: "top 90%", end: "top 55%", scrub: 1.5 } }
       );
     }, ref);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={ref} data-nav-theme="dark" className="w-full bg-black px-4 md:px-8 py-[80px] md:py-[120px]">
+    <section ref={ref} data-nav-theme="dark" className="w-full bg-[#111111] px-4 md:px-8 py-[80px] md:py-[120px]">
 
-      <div className="flex items-center justify-between mb-12 md:mb-16">
-        <p className="font-mono font-normal text-[14px] text-white uppercase leading-[1.1]">[ Work Together ]</p>
+      <div data-beyond-header="" className="flex items-center justify-between mb-10 md:mb-14">
+        <p className="font-mono font-normal text-[14px] text-white uppercase leading-[1.1]">[ Beyond ]</p>
         <p className="font-mono font-normal text-[14px] text-white uppercase leading-[1.1]">004</p>
       </div>
 
-      <div className="flex flex-col gap-10 md:gap-14">
-        <p
-          data-cta=""
-          className="font-inter font-light text-[11vw] md:text-[7vw] text-white uppercase tracking-[-0.04em] leading-[0.88]"
-        >
-          Have a <span className="font-black italic">project</span>
-          <br />in mind?
+      {/* Section headline */}
+      <div className="flex flex-col gap-0 mb-14 md:mb-20">
+        <p data-beyond-headline="" className="font-inter font-light text-[10vw] md:text-[5.5vw] text-white uppercase tracking-[-0.04em] leading-[0.9]">
+          Life beyond
         </p>
-        <div data-cta="">
-          <FillButton
-            className="border border-white text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-6 py-4 rounded-[24px]"
-            fillColor="bg-white"
-            textColor="white"
-            hoverTextColor="black"
+        <p data-beyond-headline="" className="font-inter font-light text-[10vw] md:text-[5.5vw] text-white uppercase tracking-[-0.04em] leading-[0.9] md:pl-[10vw]">
+          the <span className="font-playfair italic">frame.</span>
+        </p>
+      </div>
+
+      {/* Contact-sheet photo grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+        {frames.map(({ src, label, sub }) => (
+          <div key={label} className="flex flex-col gap-3">
+            <div
+              data-beyond-photo=""
+              className="overflow-hidden"
+              style={{ aspectRatio: "3/4" }}
+            >
+              <img
+                src={src}
+                alt={label}
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-[filter] duration-700"
+              />
+            </div>
+            <div data-beyond-tag="" className="flex flex-col gap-[2px]">
+              <p className="font-mono font-normal text-[10px] md:text-[11px] text-white uppercase leading-[1.3]">{label}</p>
+              <p className="font-mono font-normal text-[10px] md:text-[11px] text-[#555] uppercase leading-[1.3]">{sub}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Interest strip */}
+      <div className="flex flex-wrap gap-x-6 gap-y-2 mt-14 md:mt-20 pt-10 border-t border-[#2a2a2a]">
+        {interests.map((interest) => (
+          <span
+            key={interest}
+            data-beyond-interest=""
+            className="font-inter font-light text-[20px] md:text-[28px] text-[#444] tracking-[-0.04em] leading-[1.2]"
           >
-            Let&apos;s talk
-          </FillButton>
-        </div>
+            {interest}
+          </span>
+        ))}
       </div>
 
     </section>
@@ -329,7 +388,7 @@ export default function AboutPage() {
       <Hero />
       <Story />
       <Philosophy />
-      <Cta />
+      <Beyond />
     </>
   );
 }
