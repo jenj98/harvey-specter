@@ -132,88 +132,62 @@ function Hero() {
   );
 }
 
-// ─── Service row ──────────────────────────────────────────────────────────────
-// Separate component so each row gets its own GSAP-able refs.
-// Mobile and desktop each get their own imgRef so both animate correctly.
+// ─── Service row — alternating image/text layout ───────────────────────────
 
 type Offering = (typeof offerings)[number];
 
-function ServiceRow({ offering }: { offering: Offering }) {
-  const titleRef     = useRef<HTMLSpanElement>(null);
-  const mobileImgRef = useRef<HTMLImageElement>(null);
-  const desktopImgRef = useRef<HTMLImageElement>(null);
+function ServiceRow({ offering, isReversed }: { offering: Offering; isReversed: boolean }) {
+  const imgRef   = useRef<HTMLImageElement>(null);
+  const titleRef = useRef<HTMLSpanElement>(null);
 
   const handleEnter = () => {
-    gsap.to([mobileImgRef.current, desktopImgRef.current].filter(Boolean), {
-      scale: 1.08, duration: 0.6, ease: "power3.out", overwrite: "auto",
-    });
-    gsap.to(titleRef.current, { x: 8, duration: 0.5, ease: "power3.out", overwrite: "auto" });
+    gsap.to(imgRef.current,   { scale: 1.05, duration: 0.8, ease: "power3.out",  overwrite: "auto" });
+    gsap.to(titleRef.current, { x: 8,        duration: 0.5, ease: "power3.out",  overwrite: "auto" });
   };
-
   const handleLeave = () => {
-    gsap.to([mobileImgRef.current, desktopImgRef.current].filter(Boolean), {
-      scale: 1, duration: 0.65, ease: "power3.inOut", overwrite: "auto",
-    });
-    gsap.to(titleRef.current, { x: 0, duration: 0.6, ease: "power3.inOut", overwrite: "auto" });
+    gsap.to(imgRef.current,   { scale: 1, duration: 0.9, ease: "power3.inOut", overwrite: "auto" });
+    gsap.to(titleRef.current, { x: 0,     duration: 0.6, ease: "power3.inOut", overwrite: "auto" });
   };
 
   return (
     <div
       data-service-row=""
-      className="flex flex-col md:flex-row md:gap-12 py-8 md:py-10 border-b border-[#e8e8e8] first:border-t first:border-[#e8e8e8]"
+      className={`flex flex-col ${isReversed ? "md:flex-row-reverse" : "md:flex-row"} border-b border-[#e4e0d9] first:border-t first:border-[#e4e0d9]`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
-      {/* Number + title (+ small image on mobile) */}
-      <div className="flex items-center justify-between gap-4 mb-4 md:mb-0 md:w-[300px] md:shrink-0 md:items-baseline md:justify-start">
-        <div className="flex items-baseline gap-4">
-          <span className="font-mono font-normal text-[11px] text-[#aaa] uppercase shrink-0">
-            {offering.num}
-          </span>
-          <span
-            ref={titleRef}
-            className="font-inter font-light text-[20px] md:text-[26px] text-[#1f1f1f] tracking-[-0.04em] leading-[1.1] inline-block"
-          >
-            {offering.title}
-          </span>
-        </div>
-
-        {/* Mobile image — small, aligned right of title */}
-        <div className="md:hidden w-[72px] h-[72px] shrink-0 overflow-hidden">
-          <img
-            ref={mobileImgRef}
-            src={offering.image}
-            alt={offering.title}
-            className="w-full h-full object-cover"
-          />
-        </div>
+      {/* Image — full-height, 45% on desktop */}
+      <div className="h-[260px] md:h-auto md:w-[45%] md:shrink-0 md:self-stretch overflow-hidden">
+        <img
+          ref={imgRef}
+          src={offering.image}
+          alt={offering.title}
+          className="w-full h-full object-cover"
+        />
       </div>
 
-      {/* Description + deliverable tags */}
-      <div className="flex-1 flex flex-col gap-4">
-        <p className="font-inter font-normal text-[13px] md:text-[14px] text-[#666] leading-[1.6] tracking-[-0.02em]">
+      {/* Text content */}
+      <div className="flex-1 flex flex-col justify-center gap-5 px-6 md:px-14 py-10 md:py-14">
+        <span className="font-mono font-normal text-[11px] text-[#aaa] uppercase">{offering.num}</span>
+        <span
+          ref={titleRef}
+          className="font-inter font-light text-[26px] md:text-[38px] text-[#1a1a1a] tracking-[-0.04em] leading-[1.05] inline-block"
+        >
+          {offering.title}
+        </span>
+        <p className="font-inter font-normal text-[13px] md:text-[14px] text-[#666] leading-[1.7] max-w-[460px]">
           {offering.description}
         </p>
         <div className="flex flex-wrap gap-2">
           {offering.deliverables.map((d) => (
             <span
               key={d}
-              className="font-mono font-normal text-[10px] md:text-[11px] text-[#1f1f1f] border border-[#ddd] px-3 py-1 uppercase leading-[1]"
+              className="font-mono font-normal text-[10px] md:text-[11px] text-[#1a1a1a] border border-[#d5d1c8] px-3 py-[5px] uppercase leading-[1]"
             >
               {d}
             </span>
           ))}
         </div>
-      </div>
-
-      {/* Desktop image — larger, rightmost */}
-      <div className="hidden md:block w-[170px] h-[170px] shrink-0 overflow-hidden">
-        <img
-          ref={desktopImgRef}
-          src={offering.image}
-          alt={offering.title}
-          className="w-full h-full object-cover"
-        />
       </div>
     </div>
   );
@@ -237,23 +211,25 @@ function Offerings() {
       gsap.fromTo(q("[data-service-row]"),
         { opacity: 0, y: 50 },
         { opacity: 1, y: 0, stagger: 0.1,
-          scrollTrigger: { trigger: ref.current, start: "top 78%", end: "center 45%", scrub: 1.5 } }
+          scrollTrigger: { trigger: ref.current, start: "top 78%", end: "center 50%", scrub: 1.5 } }
       );
     }, ref);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={ref} className="w-full bg-white px-4 md:px-8 py-[80px] md:py-[120px]">
+    // Warm cream — distinct from About's clinical white
+    <section ref={ref} className="w-full bg-[#f7f5f0]">
 
-      <div data-offerings-header="" className="flex items-center justify-between mb-12 md:mb-16">
-        <p className="font-mono font-normal text-[14px] text-[#1f1f1f] uppercase leading-[1.1]">[ What We Do ]</p>
-        <p className="font-mono font-normal text-[14px] text-[#1f1f1f] uppercase leading-[1.1]">002</p>
+      <div data-offerings-header="" className="px-4 md:px-8 pt-[80px] md:pt-[120px] pb-10 md:pb-14 flex items-center justify-between">
+        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">[ What We Do ]</p>
+        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">002</p>
       </div>
 
+      {/* Full-width alternating rows — no horizontal section padding */}
       <div className="flex flex-col">
-        {offerings.map((o) => (
-          <ServiceRow key={o.num} offering={o} />
+        {offerings.map((o, i) => (
+          <ServiceRow key={o.num} offering={o} isReversed={i % 2 !== 0} />
         ))}
       </div>
 
@@ -262,8 +238,6 @@ function Offerings() {
 }
 
 // ─── Process ──────────────────────────────────────────────────────────────────
-
-const stepTopPad = ["", "md:pt-[7vw]", "md:pt-[14vw]", "md:pt-[21vw]"];
 
 function Process() {
   const ref = useRef<HTMLElement>(null);
@@ -279,31 +253,40 @@ function Process() {
       );
 
       gsap.fromTo(q("[data-step]"),
-        { opacity: 0, y: 60 },
+        { opacity: 0, y: 40 },
         { opacity: 1, y: 0, stagger: 0.1,
-          scrollTrigger: { trigger: ref.current, start: "top 76%", end: "center 40%", scrub: 1.5 } }
+          scrollTrigger: { trigger: ref.current, start: "top 76%", end: "center 55%", scrub: 1.5 } }
       );
     }, ref);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={ref} className="w-full bg-[#f3f3f3] px-4 md:px-8 py-[80px] md:py-[120px]">
+    // Pure white — different from About's #f3f3f3 gray
+    <section ref={ref} className="w-full bg-white px-4 md:px-8 py-[80px] md:py-[120px]">
 
-      <div data-process-header="" className="flex items-center justify-between mb-12 md:mb-20">
-        <p className="font-mono font-normal text-[14px] text-[#1f1f1f] uppercase leading-[1.1]">[ How We Work ]</p>
-        <p className="font-mono font-normal text-[14px] text-[#1f1f1f] uppercase leading-[1.1]">003</p>
+      <div data-process-header="" className="flex items-center justify-between mb-12 md:mb-16">
+        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">[ How We Work ]</p>
+        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">003</p>
       </div>
 
-      {/* Desktop: staircase layout — each step sits lower than the last */}
-      <div className="hidden md:grid md:grid-cols-4 md:gap-8 md:pb-[22vw]">
+      {/* Desktop: 4 equal columns with vertical dividers — no staircase, no dead space */}
+      <div className="hidden md:flex">
         {processSteps.map(({ num, label, description }, i) => (
-          <div key={num} data-step="" className={`flex flex-col gap-5 ${stepTopPad[i]}`}>
-            <span className="font-mono font-normal text-[11px] text-[#aaa] uppercase">{num}</span>
-            <p className="font-inter font-light text-[26px] md:text-[32px] text-[#1f1f1f] tracking-[-0.04em] leading-[1.05]">
+          <div
+            key={num}
+            data-step=""
+            className={[
+              "flex-1 flex flex-col gap-5",
+              i > 0 ? "border-l border-[#e8e8e8] pl-8" : "",
+              i < processSteps.length - 1 ? "pr-8" : "",
+            ].join(" ")}
+          >
+            <span className="font-mono font-normal text-[11px] text-[#bbb] uppercase">{num}</span>
+            <p className="font-inter font-light text-[26px] md:text-[30px] text-[#1a1a1a] tracking-[-0.04em] leading-[1.05]">
               {label}
             </p>
-            <p className="font-inter font-normal text-[13px] text-[#777] leading-[1.6]">{description}</p>
+            <p className="font-inter font-normal text-[13px] text-[#888] leading-[1.7]">{description}</p>
           </div>
         ))}
       </div>
@@ -313,18 +296,18 @@ function Process() {
         {processSteps.map(({ num, label, description }, i) => (
           <div key={num} data-step="" className="flex gap-5 pb-10">
             <div className="flex flex-col items-center shrink-0">
-              <div className="w-7 h-7 border border-[#ccc] flex items-center justify-center">
-                <span className="font-mono text-[9px] text-[#aaa]">{num}</span>
+              <div className="w-7 h-7 border border-[#ddd] flex items-center justify-center">
+                <span className="font-mono text-[9px] text-[#bbb]">{num}</span>
               </div>
               {i < processSteps.length - 1 && (
-                <div className="flex-1 w-px bg-[#ddd] mt-2 min-h-[40px]" />
+                <div className="flex-1 w-px bg-[#e8e8e8] mt-2 min-h-[40px]" />
               )}
             </div>
             <div className="flex flex-col gap-2 pt-1">
-              <p className="font-inter font-light text-[22px] text-[#1f1f1f] tracking-[-0.04em] leading-[1.1]">
+              <p className="font-inter font-light text-[22px] text-[#1a1a1a] tracking-[-0.04em] leading-[1.1]">
                 {label}
               </p>
-              <p className="font-inter font-normal text-[13px] text-[#777] leading-[1.6]">{description}</p>
+              <p className="font-inter font-normal text-[13px] text-[#888] leading-[1.7]">{description}</p>
             </div>
           </div>
         ))}
@@ -352,7 +335,8 @@ function Start() {
   }, []);
 
   return (
-    <section ref={ref} data-nav-theme="dark" className="w-full bg-[#111111] px-4 md:px-8 py-[80px] md:py-[120px]">
+    // Pure black — merges seamlessly with the sticky footer below
+    <section ref={ref} data-nav-theme="dark" className="w-full bg-black px-4 md:px-8 py-[80px] md:py-[120px]">
 
       <div data-start-item="" className="flex items-center justify-between mb-12 md:mb-16">
         <p className="font-mono font-normal text-[14px] text-white uppercase leading-[1.1]">[ Getting Started ]</p>
@@ -364,8 +348,8 @@ function Start() {
         {/* Expectations list */}
         <div className="flex-1 flex flex-col mb-12 md:mb-0">
           {expectations.map(({ label, detail }) => (
-            <div key={label} data-start-item="" className="flex flex-col gap-1 py-6 border-b border-[#222] first:border-t first:border-[#222]">
-              <p className="font-mono font-normal text-[11px] text-[#555] uppercase">{label}</p>
+            <div key={label} data-start-item="" className="flex flex-col gap-1 py-6 border-b border-[#1f1f1f] first:border-t first:border-[#1f1f1f]">
+              <p className="font-mono font-normal text-[11px] text-[#444] uppercase">{label}</p>
               <p className="font-inter font-normal text-[14px] md:text-[15px] text-white leading-[1.5] tracking-[-0.02em]">
                 {detail}
               </p>
