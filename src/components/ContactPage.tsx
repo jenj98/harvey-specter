@@ -19,7 +19,7 @@ function InfoPanel() {
       <div className="flex flex-col gap-10">
         <div>
           <p className="font-inter font-light text-white uppercase tracking-[-0.04em] leading-[0.88]" style={{ fontSize: "clamp(52px, 6vw, 86px)" }}>
-            Let&apos;s<br /><span className="font-playfair italic">work</span><br />together.
+            Let&apos;s<br /><span className="font-playfair italic">talk.</span>
           </p>
         </div>
 
