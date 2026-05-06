@@ -200,10 +200,10 @@ function Achievements() {
   }, []);
 
   return (
-    <section ref={ref} data-nav-theme="dark" className="w-full bg-black px-4 md:px-8 py-[72px] md:py-[100px]">
+    <section ref={ref} className="w-full bg-white px-4 md:px-8 py-[72px] md:py-[100px]">
       <div className="flex items-center justify-between mb-12 md:mb-16">
-        <p className="font-mono text-[11px] md:text-[12px] text-white/40 uppercase tracking-[0.08em]">[ Recognition ]</p>
-        <p className="font-mono text-[11px] md:text-[12px] text-white/40 uppercase tracking-[0.08em]">003</p>
+        <p className="font-mono text-[11px] md:text-[12px] text-black/35 uppercase tracking-[0.08em]">[ Recognition ]</p>
+        <p className="font-mono text-[11px] md:text-[12px] text-black/35 uppercase tracking-[0.08em]">003</p>
       </div>
 
       <div className="flex flex-col">
@@ -211,15 +211,15 @@ function Achievements() {
           <div
             key={i}
             data-ach=""
-            className="flex items-center justify-between py-5 md:py-6 border-b border-white/[0.08] first:border-t first:border-white/[0.08] group cursor-default"
+            className="flex items-center justify-between py-5 md:py-6 border-b border-black/[0.08] first:border-t first:border-black/[0.08] group cursor-default"
           >
             <div className="flex items-center gap-6 md:gap-10">
-              <span className="font-mono text-[10px] text-white/30 uppercase shrink-0">{a.year}</span>
-              <p className="font-inter font-light text-[16px] md:text-[20px] text-white tracking-[-0.03em] leading-[1.2] group-hover:translate-x-2 transition-transform duration-300">
+              <span className="font-mono text-[10px] text-black/30 uppercase shrink-0">{a.year}</span>
+              <p className="font-inter font-light text-[16px] md:text-[20px] text-black tracking-[-0.03em] leading-[1.2] group-hover:translate-x-2 transition-transform duration-300">
                 {a.title}
               </p>
             </div>
-            <span className="text-white/20 group-hover:text-white/60 transition-colors duration-300 shrink-0 ml-4">
+            <span className="text-black/20 group-hover:text-black/60 transition-colors duration-300 shrink-0 ml-4">
               <Arrow />
             </span>
           </div>
