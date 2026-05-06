@@ -1,5 +1,6 @@
 import { client, urlFor } from '@/lib/sanity/client'
 import FillButton from '@/components/FillButton'
+import { ProjectCard } from '@/components/ProjectCard'
 
 interface SelectedWork {
   _id: string
@@ -20,21 +21,6 @@ async function getSelectedWorks(): Promise<SelectedWork[]> {
   )
 }
 
-function ArrowIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <circle cx="16" cy="16" r="15.5" stroke="#111111" />
-      <path
-        d="M11.5 20.5L20.5 11.5M20.5 11.5H13.5M20.5 11.5V18.5"
-        stroke="#111111"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 // Orders 1 & 4 → tall (744px), orders 2 & 3 → short (699px)
 function heightClass(order: number) {
   return order % 3 === 1 ? 'h-[744px]' : 'h-[699px]'
@@ -42,40 +28,6 @@ function heightClass(order: number) {
 
 function aspectClass(order: number) {
   return order % 3 === 1 ? 'aspect-[676/744]' : 'aspect-[676/699]'
-}
-
-function ProjectCard({ work, imageClass }: { work: SelectedWork; imageClass: string }) {
-  const imageUrl = urlFor(work.image).width(800).auto('format').url()
-
-  return (
-    <div className="flex flex-col gap-[10px]">
-      <div className={`relative overflow-hidden isolate ${imageClass}`}>
-        <img
-          src={imageUrl}
-          alt={work.image.alt ?? work.title}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        {work.tags?.length > 0 && (
-          <div className="absolute bottom-4 left-4 z-10 flex gap-3 items-center">
-            {work.tags.map((tag) => (
-              <span
-                key={tag}
-                className="font-inter font-medium text-[14px] text-[#111] tracking-[-0.56px] px-2 py-1 rounded-[24px] bg-[rgba(255,255,255,0.3)] backdrop-blur-[10px] whitespace-nowrap leading-normal"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="flex items-center justify-between">
-        <p className="font-inter font-black text-[24px] md:text-[36px] text-black tracking-[-0.96px] md:tracking-[-1.44px] uppercase leading-[1.1] whitespace-nowrap">
-          {work.title}
-        </p>
-        <ArrowIcon />
-      </div>
-    </div>
-  )
 }
 
 function CtaBracket({ className = '' }: { className?: string }) {
@@ -140,7 +92,7 @@ export default async function SelectedWorkSection() {
       {/* ── Mobile: stacked ─────────────────────────────────────────── */}
       <div className="flex flex-col gap-6 md:hidden">
         {works.map((work) => (
-          <ProjectCard key={work._id} work={work} imageClass={`w-full ${aspectClass(work.order)}`} />
+          <ProjectCard key={work._id} work={work} imageClass={`w-full ${aspectClass(work.order)}`} imageUrl={urlFor(work.image).width(800).auto('format').url()} />
         ))}
         <CtaBracket className="w-full" />
       </div>
@@ -150,14 +102,14 @@ export default async function SelectedWorkSection() {
         <div className="flex-1 self-stretch flex">
           <div className="flex-1 h-full flex flex-col justify-between">
             {left.map((work) => (
-              <ProjectCard key={work._id} work={work} imageClass={heightClass(work.order)} />
+              <ProjectCard key={work._id} work={work} imageClass={heightClass(work.order)} imageUrl={urlFor(work.image).width(800).auto('format').url()} />
             ))}
             <CtaBracket className="w-[465px]" />
           </div>
         </div>
         <div className="flex-1 flex flex-col gap-[117px] pt-[240px]">
           {right.map((work) => (
-            <ProjectCard key={work._id} work={work} imageClass={heightClass(work.order)} />
+            <ProjectCard key={work._id} work={work} imageClass={heightClass(work.order)} imageUrl={urlFor(work.image).width(800).auto('format').url()} />
           ))}
         </div>
       </div>
