@@ -13,29 +13,33 @@ const offerings = [
   {
     num: "01",
     title: "Creative Direction",
+    image: "/deliverables-3.png",
     description:
       "Setting the visual tone for campaigns, shoots, and brand worlds. From initial concept through final execution — this is where a scattered idea becomes a cohesive visual language.",
     deliverables: ["Creative Brief", "Mood Boards", "Art Direction", "Campaign Visuals"],
   },
   {
     num: "02",
-    title: "Brand Identity",
+    title: "Brand Discovery",
+    image: "/deliverables-1.png",
     description:
-      "Building visual systems that communicate who you are before you say a word. Logo, colour, type, and the rules that hold it all together across every context.",
+      "Building visual systems that communicate who you are before you say a word. Logo, colour, type, and the rules that hold it all together across every touchpoint.",
     deliverables: ["Logo Suite", "Colour System", "Typography", "Brand Guidelines"],
   },
   {
     num: "03",
     title: "Photography",
+    image: "/deliverables-4.png",
     description:
       "Editorial and commercial photography that goes beyond documentation. Sharp, cinematic images built to stop the scroll and hold attention long after.",
     deliverables: ["Art-Directed Shoot", "Edited Selects", "Licensing", "Usage Rights"],
   },
   {
     num: "04",
-    title: "Digital Experience",
+    title: "Web Design & Dev",
+    image: "/deliverables-2.png",
     description:
-      "Design and direction for websites, campaigns, and interactive touchpoints — where brand identity becomes something people move through.",
+      "Design and direction for websites, campaigns, and interactive touchpoints — where brand identity becomes something people move through and remember.",
     deliverables: ["UX/UI Design", "Prototypes", "Design System", "Dev Handoff"],
   },
 ] as const;
@@ -68,8 +72,8 @@ const processSteps = [
 ] as const;
 
 const expectations = [
-  { label: "Kick-off", detail: "Most projects start within 2 weeks of an initial call." },
-  { label: "Duration", detail: "Depending on scope, engagements run 2–8 weeks." },
+  { label: "Kick-off",      detail: "Most projects start within 2 weeks of an initial call." },
+  { label: "Duration",      detail: "Depending on scope, engagements run 2–8 weeks." },
   { label: "What to bring", detail: "A brief, references you admire, and a clear sense of what to avoid." },
 ] as const;
 
@@ -91,9 +95,9 @@ function Hero() {
 
   const lines: [string, string][] = [
     ["Creative Direction", ""],
-    ["Brand Identity",     "md:pl-[8vw]"],
+    ["Brand Discovery",    "md:pl-[8vw]"],
     ["Photography",        "md:pl-[4vw]"],
-    ["Digital Experience", "md:pl-[14vw]"],
+    ["Web Design & Dev",   "md:pl-[14vw]"],
   ];
 
   return (
@@ -125,6 +129,93 @@ function Hero() {
         <p className="font-mono font-normal text-[12px] md:text-[14px] text-white uppercase leading-[1.1]">Est. 2016</p>
       </div>
     </section>
+  );
+}
+
+// ─── Service row ──────────────────────────────────────────────────────────────
+// Separate component so each row gets its own GSAP-able refs.
+// Mobile and desktop each get their own imgRef so both animate correctly.
+
+type Offering = (typeof offerings)[number];
+
+function ServiceRow({ offering }: { offering: Offering }) {
+  const titleRef     = useRef<HTMLSpanElement>(null);
+  const mobileImgRef = useRef<HTMLImageElement>(null);
+  const desktopImgRef = useRef<HTMLImageElement>(null);
+
+  const handleEnter = () => {
+    gsap.to([mobileImgRef.current, desktopImgRef.current].filter(Boolean), {
+      scale: 1.08, duration: 0.6, ease: "power3.out", overwrite: "auto",
+    });
+    gsap.to(titleRef.current, { x: 8, duration: 0.5, ease: "power3.out", overwrite: "auto" });
+  };
+
+  const handleLeave = () => {
+    gsap.to([mobileImgRef.current, desktopImgRef.current].filter(Boolean), {
+      scale: 1, duration: 0.65, ease: "power3.inOut", overwrite: "auto",
+    });
+    gsap.to(titleRef.current, { x: 0, duration: 0.6, ease: "power3.inOut", overwrite: "auto" });
+  };
+
+  return (
+    <div
+      data-service-row=""
+      className="flex flex-col md:flex-row md:gap-12 py-8 md:py-10 border-b border-[#e8e8e8] first:border-t first:border-[#e8e8e8]"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      {/* Number + title (+ small image on mobile) */}
+      <div className="flex items-center justify-between gap-4 mb-4 md:mb-0 md:w-[300px] md:shrink-0 md:items-baseline md:justify-start">
+        <div className="flex items-baseline gap-4">
+          <span className="font-mono font-normal text-[11px] text-[#aaa] uppercase shrink-0">
+            {offering.num}
+          </span>
+          <span
+            ref={titleRef}
+            className="font-inter font-light text-[20px] md:text-[26px] text-[#1f1f1f] tracking-[-0.04em] leading-[1.1] inline-block"
+          >
+            {offering.title}
+          </span>
+        </div>
+
+        {/* Mobile image — small, aligned right of title */}
+        <div className="md:hidden w-[72px] h-[72px] shrink-0 overflow-hidden">
+          <img
+            ref={mobileImgRef}
+            src={offering.image}
+            alt={offering.title}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+
+      {/* Description + deliverable tags */}
+      <div className="flex-1 flex flex-col gap-4">
+        <p className="font-inter font-normal text-[13px] md:text-[14px] text-[#666] leading-[1.6] tracking-[-0.02em]">
+          {offering.description}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {offering.deliverables.map((d) => (
+            <span
+              key={d}
+              className="font-mono font-normal text-[10px] md:text-[11px] text-[#1f1f1f] border border-[#ddd] px-3 py-1 uppercase leading-[1]"
+            >
+              {d}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop image — larger, rightmost */}
+      <div className="hidden md:block w-[170px] h-[170px] shrink-0 overflow-hidden">
+        <img
+          ref={desktopImgRef}
+          src={offering.image}
+          alt={offering.title}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -161,37 +252,8 @@ function Offerings() {
       </div>
 
       <div className="flex flex-col">
-        {offerings.map(({ num, title, description, deliverables }) => (
-          <div
-            key={num}
-            data-service-row=""
-            className="flex flex-col md:flex-row md:gap-16 py-8 md:py-10 border-b border-[#e8e8e8] first:border-t first:border-[#e8e8e8]"
-          >
-            {/* Left: number + service name */}
-            <div className="md:w-[300px] md:shrink-0 flex items-baseline gap-4 mb-4 md:mb-0">
-              <span className="font-mono font-normal text-[11px] text-[#aaa] uppercase shrink-0">{num}</span>
-              <span className="font-inter font-light text-[20px] md:text-[26px] text-[#1f1f1f] tracking-[-0.04em] leading-[1.1]">
-                {title}
-              </span>
-            </div>
-
-            {/* Right: description + deliverable tags */}
-            <div className="flex-1 flex flex-col gap-4">
-              <p className="font-inter font-normal text-[13px] md:text-[14px] text-[#666] leading-[1.6] tracking-[-0.02em]">
-                {description}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {deliverables.map((d) => (
-                  <span
-                    key={d}
-                    className="font-mono font-normal text-[10px] md:text-[11px] text-[#1f1f1f] border border-[#ddd] px-3 py-1 uppercase leading-[1]"
-                  >
-                    {d}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
+        {offerings.map((o) => (
+          <ServiceRow key={o.num} offering={o} />
         ))}
       </div>
 
@@ -233,7 +295,7 @@ function Process() {
         <p className="font-mono font-normal text-[14px] text-[#1f1f1f] uppercase leading-[1.1]">003</p>
       </div>
 
-      {/* Desktop: staircase — each column drops lower than the last */}
+      {/* Desktop: staircase layout — each step sits lower than the last */}
       <div className="hidden md:grid md:grid-cols-4 md:gap-8 md:pb-[22vw]">
         {processSteps.map(({ num, label, description }, i) => (
           <div key={num} data-step="" className={`flex flex-col gap-5 ${stepTopPad[i]}`}>
@@ -241,14 +303,12 @@ function Process() {
             <p className="font-inter font-light text-[26px] md:text-[32px] text-[#1f1f1f] tracking-[-0.04em] leading-[1.05]">
               {label}
             </p>
-            <p className="font-inter font-normal text-[13px] text-[#777] leading-[1.6]">
-              {description}
-            </p>
+            <p className="font-inter font-normal text-[13px] text-[#777] leading-[1.6]">{description}</p>
           </div>
         ))}
       </div>
 
-      {/* Mobile: vertical with connector */}
+      {/* Mobile: vertical timeline with connector line */}
       <div className="md:hidden flex flex-col">
         {processSteps.map(({ num, label, description }, i) => (
           <div key={num} data-step="" className="flex gap-5 pb-10">
@@ -264,9 +324,7 @@ function Process() {
               <p className="font-inter font-light text-[22px] text-[#1f1f1f] tracking-[-0.04em] leading-[1.1]">
                 {label}
               </p>
-              <p className="font-inter font-normal text-[13px] text-[#777] leading-[1.6]">
-                {description}
-              </p>
+              <p className="font-inter font-normal text-[13px] text-[#777] leading-[1.6]">{description}</p>
             </div>
           </div>
         ))}
@@ -303,7 +361,7 @@ function Start() {
 
       <div className="flex flex-col md:flex-row md:gap-20 md:items-start">
 
-        {/* Left: expectations */}
+        {/* Expectations list */}
         <div className="flex-1 flex flex-col mb-12 md:mb-0">
           {expectations.map(({ label, detail }) => (
             <div key={label} data-start-item="" className="flex flex-col gap-1 py-6 border-b border-[#222] first:border-t first:border-[#222]">
@@ -315,7 +373,7 @@ function Start() {
           ))}
         </div>
 
-        {/* Right: headline + CTA */}
+        {/* Headline + CTA */}
         <div data-start-item="" className="flex flex-col gap-8 md:w-[42%] md:shrink-0 md:pt-6">
           <p className="font-inter font-light text-[10vw] md:text-[4vw] text-white uppercase tracking-[-0.04em] leading-[0.88]">
             Ready to<br /><span className="font-playfair italic">begin?</span>
