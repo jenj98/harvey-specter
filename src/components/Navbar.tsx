@@ -5,15 +5,21 @@ import gsap from "gsap";
 import Link from "next/link";
 import FillButton from "@/components/FillButton";
 
-const navLinks = ["About", "Services", "Projects", "News", "Contact"];
+const navLinks = [
+  { label: "About",    href: "/about" },
+  { label: "Services", href: "#" },
+  { label: "Projects", href: "#" },
+  { label: "News",     href: "#" },
+  { label: "Contact",  href: "#" },
+];
 const MENU_ORIGIN = "92% 5%";
 const NAV_H = 80;
 
-function NavLink({ label, theme }: { label: string; theme: "light" | "dark" }) {
+function NavLink({ label, href, theme }: { label: string; href: string; theme: "light" | "dark" }) {
   const innerRef = useRef<HTMLSpanElement>(null);
   return (
-    <a
-      href="#"
+    <Link
+      href={href}
       className={`block font-inter font-semibold text-[16px] capitalize tracking-[-0.64px] whitespace-nowrap overflow-hidden h-[1em] transition-colors duration-300 ${
         theme === "dark" ? "text-white" : "text-black"
       }`}
@@ -24,7 +30,7 @@ function NavLink({ label, theme }: { label: string; theme: "light" | "dark" }) {
         <span className="block">{label}</span>
         <span className="block" aria-hidden="true">{label}</span>
       </span>
-    </a>
+    </Link>
   );
 }
 
@@ -176,8 +182,8 @@ export default function Navbar() {
 
         <ul ref={desktopUlRef} className="hidden md:flex items-center gap-[56px] list-none m-0 p-0">
           {navLinks.map((link) => (
-            <li key={link}>
-              <NavLink label={link} theme={theme} />
+            <li key={link.label}>
+              <NavLink label={link.label} href={link.href} theme={theme} />
             </li>
           ))}
         </ul>
@@ -225,10 +231,10 @@ export default function Navbar() {
         </div>
         <ul className="flex-1 flex flex-col items-center justify-center gap-1 list-none m-0 p-0">
           {navLinks.map((link, i) => (
-            <li key={link} ref={(el) => { menuItemsRef.current[i] = el; }}>
-              <a href="#" className="block font-inter font-light text-[42px] text-black capitalize tracking-[-2px] leading-[1.15]" onClick={() => setOpen(false)}>
-                {link}
-              </a>
+            <li key={link.label} ref={(el) => { menuItemsRef.current[i] = el; }}>
+              <Link href={link.href} className="block font-inter font-light text-[42px] text-black capitalize tracking-[-2px] leading-[1.15]" onClick={() => setOpen(false)}>
+                {link.label}
+              </Link>
             </li>
           ))}
         </ul>
