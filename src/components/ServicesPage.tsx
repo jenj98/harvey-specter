@@ -267,7 +267,7 @@ function Process() {
 
       <div data-process-header="" className="flex items-center justify-between mb-12 md:mb-16">
         <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">[ How We Work ]</p>
-        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">003</p>
+        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">004</p>
       </div>
 
       {/* Desktop: 4 equal columns with vertical dividers — no staircase, no dead space */}
@@ -335,12 +335,12 @@ function Start() {
   }, []);
 
   return (
-    // Pure black — merges seamlessly with the sticky footer below
-    <section ref={ref} data-nav-theme="dark" className="w-full bg-black px-4 md:px-8 py-[80px] md:py-[120px]">
+    // Warm stone — clearly distinct from footer black and from the cream above
+    <section ref={ref} className="w-full bg-[#ebe6de] px-4 md:px-8 py-[80px] md:py-[120px]">
 
       <div data-start-item="" className="flex items-center justify-between mb-12 md:mb-16">
-        <p className="font-mono font-normal text-[14px] text-white uppercase leading-[1.1]">[ Getting Started ]</p>
-        <p className="font-mono font-normal text-[14px] text-white uppercase leading-[1.1]">004</p>
+        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">[ Getting Started ]</p>
+        <p className="font-mono font-normal text-[14px] text-[#1a1a1a] uppercase leading-[1.1]">003</p>
       </div>
 
       <div className="flex flex-col md:flex-row md:gap-20 md:items-start">
@@ -348,9 +348,9 @@ function Start() {
         {/* Expectations list */}
         <div className="flex-1 flex flex-col mb-12 md:mb-0">
           {expectations.map(({ label, detail }) => (
-            <div key={label} data-start-item="" className="flex flex-col gap-1 py-6 border-b border-[#1f1f1f] first:border-t first:border-[#1f1f1f]">
-              <p className="font-mono font-normal text-[11px] text-[#444] uppercase">{label}</p>
-              <p className="font-inter font-normal text-[14px] md:text-[15px] text-white leading-[1.5] tracking-[-0.02em]">
+            <div key={label} data-start-item="" className="flex flex-col gap-1 py-6 border-b border-[#d5cfc5] first:border-t first:border-[#d5cfc5]">
+              <p className="font-mono font-normal text-[11px] text-[#9e9890] uppercase">{label}</p>
+              <p className="font-inter font-normal text-[14px] md:text-[15px] text-[#1a1a1a] leading-[1.5] tracking-[-0.02em]">
                 {detail}
               </p>
             </div>
@@ -359,14 +359,14 @@ function Start() {
 
         {/* Headline + CTA */}
         <div data-start-item="" className="flex flex-col gap-8 md:w-[42%] md:shrink-0 md:pt-6">
-          <p className="font-inter font-light text-[10vw] md:text-[4vw] text-white uppercase tracking-[-0.04em] leading-[0.88]">
+          <p className="font-inter font-light text-[10vw] md:text-[4vw] text-[#1a1a1a] uppercase tracking-[-0.04em] leading-[0.88]">
             Ready to<br /><span className="font-playfair italic">begin?</span>
           </p>
           <FillButton
-            className="self-start border border-white text-white font-inter font-medium text-[14px] tracking-[-0.56px] px-6 py-4 rounded-[24px]"
-            fillColor="bg-white"
-            textColor="white"
-            hoverTextColor="black"
+            className="self-start border border-[#1a1a1a] text-[#1a1a1a] font-inter font-medium text-[14px] tracking-[-0.56px] px-6 py-4 rounded-[24px]"
+            fillColor="bg-[#1a1a1a]"
+            textColor="[#1a1a1a]"
+            hoverTextColor="white"
           >
             Start the conversation
           </FillButton>
@@ -384,8 +384,8 @@ export default function ServicesPage() {
     <>
       <Hero />
       <Offerings />
-      <Process />
       <Start />
+      <Process />
     </>
   );
 }
