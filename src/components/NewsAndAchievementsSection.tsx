@@ -1,3 +1,11 @@
+"use client";
+
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 const description =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
@@ -21,47 +29,143 @@ function ArrowIcon() {
   );
 }
 
-function ReadMoreLink() {
-  return (
-    <div className="inline-flex items-center gap-[10px] border-b border-black py-1">
-      <span className="font-inter font-medium text-[14px] text-black tracking-[-0.56px] leading-normal">
-        Read more
-      </span>
-      <ArrowIcon />
-    </div>
-  );
-}
-
-function DesktopCard({
-  image,
-  text,
-  offsetTop = false,
-}: {
+function NewsCard({ image, text, offsetTop = false }: {
   image: string;
   text: string;
   offsetTop?: boolean;
 }) {
+  const imgRef  = useRef<HTMLImageElement>(null);
+  const linkRef = useRef<HTMLDivElement>(null);
+
+  const handleEnter = () => {
+    gsap.to(imgRef.current,  { scale: 1.07, duration: 0.65, ease: "power3.out", overwrite: "auto" });
+    gsap.to(linkRef.current, { x: 5, duration: 0.4, ease: "power3.out", overwrite: "auto" });
+  };
+
+  const handleLeave = () => {
+    gsap.to(imgRef.current,  { scale: 1, duration: 0.65, ease: "power3.inOut", overwrite: "auto" });
+    gsap.to(linkRef.current, { x: 0, duration: 0.5, ease: "power3.inOut", overwrite: "auto" });
+  };
+
   return (
-    <div className={`flex flex-col gap-4 flex-1 min-w-0 items-start${offsetTop ? " pt-[60px] min-[1440px]:pt-[120px]" : ""}`}>
+    <div
+      className={`flex flex-col gap-4 items-start cursor-pointer${offsetTop ? " pt-[60px] min-[1440px]:pt-[120px]" : ""}`}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
       <div className="w-full aspect-[353/469] overflow-hidden shrink-0">
-        <img src={image} alt="" className="w-full h-full object-cover" />
+        <img ref={imgRef} src={image} alt="" className="w-full h-full object-cover" />
       </div>
       <p className="font-inter font-normal text-[14px] text-[#1f1f1f] tracking-[-0.56px] leading-[1.3]">
         {text}
       </p>
-      <ReadMoreLink />
+      <div ref={linkRef} className="inline-flex items-center gap-[10px] border-b border-black py-1">
+        <span className="font-inter font-medium text-[14px] text-black tracking-[-0.56px] leading-normal">
+          Read more
+        </span>
+        <ArrowIcon />
+      </div>
+    </div>
+  );
+}
+
+function MobileNewsCard({ image, text }: { image: string; text: string }) {
+  const imgRef  = useRef<HTMLImageElement>(null);
+  const linkRef = useRef<HTMLDivElement>(null);
+
+  const handleEnter = () => {
+    gsap.to(imgRef.current,  { scale: 1.07, duration: 0.65, ease: "power3.out", overwrite: "auto" });
+    gsap.to(linkRef.current, { x: 5, duration: 0.4, ease: "power3.out", overwrite: "auto" });
+  };
+
+  const handleLeave = () => {
+    gsap.to(imgRef.current,  { scale: 1, duration: 0.65, ease: "power3.inOut", overwrite: "auto" });
+    gsap.to(linkRef.current, { x: 0, duration: 0.5, ease: "power3.inOut", overwrite: "auto" });
+  };
+
+  return (
+    <div
+      className="flex flex-col gap-4 w-[300px] cursor-pointer"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <div className="w-[300px] aspect-[353/469] overflow-hidden">
+        <img ref={imgRef} src={image} alt="" className="w-full h-full object-cover" />
+      </div>
+      <p className="font-inter font-normal text-[14px] text-[#1f1f1f] tracking-[-0.56px] leading-[1.3]">
+        {text}
+      </p>
+      <div ref={linkRef} className="inline-flex items-center gap-[10px] border-b border-black py-1">
+        <span className="font-inter font-medium text-[14px] text-black tracking-[-0.56px] leading-normal">
+          Read more
+        </span>
+        <ArrowIcon />
+      </div>
     </div>
   );
 }
 
 export default function NewsAndAchievementsSection() {
+  const desktopRef = useRef<HTMLElement>(null);
+  const mobileRef  = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // ── Desktop ──────────────────────────────────────────────────────────
+    const desktopCtx = gsap.context((self) => {
+      const q = self.selector!;
+
+      // Cards: all three rise up together, scrubbed
+      gsap.fromTo(
+        q("[data-card]"),
+        { y: 60, opacity: 0 },
+        {
+          y: 0, opacity: 1,
+          ease: "power2.out",
+          stagger: 0.08,
+          scrollTrigger: {
+            trigger: desktopRef.current,
+            start: "top 78%",
+            end: "top 20%",
+            scrub: 1.5,
+          },
+        }
+      );
+    }, desktopRef);
+
+    // ── Mobile ───────────────────────────────────────────────────────────
+    const mobileCtx = gsap.context((self) => {
+      const q = self.selector!;
+
+      gsap.fromTo(
+        q("[data-mobile-card]"),
+        { opacity: 0, y: 44 },
+        {
+          opacity: 1, y: 0,
+          stagger: 0.14,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: mobileRef.current,
+            start: "top 80%",
+            end: "top 28%",
+            scrub: 1.5,
+          },
+        }
+      );
+    }, mobileRef);
+
+    return () => {
+      desktopCtx.revert();
+      mobileCtx.revert();
+    };
+  }, []);
+
   return (
     <>
       {/* ── Desktop + Tablet (≥768px) ──────────────────────────────────── */}
-      <section className="hidden md:block bg-[#f3f3f3] w-full px-8 py-[80px] min-[1440px]:py-[120px]">
+      <section ref={desktopRef} className="hidden md:block bg-[#f3f3f3] w-full px-8 py-[80px] min-[1440px]:py-[120px]">
         <div className="flex items-end w-full">
 
-          {/* Rotated title */}
+          {/* Rotated title — two lines animate from opposite directions */}
           <div className="self-stretch flex items-center justify-center shrink-0 w-[70px] min-[1440px]:w-[110px] overflow-hidden">
             <div className="-rotate-90 flex-none whitespace-nowrap">
               <p className="font-inter font-light text-[40px] min-[1440px]:text-[64px] text-black tracking-[-3.2px] min-[1440px]:tracking-[-5.12px] uppercase leading-[0.86]">
@@ -75,18 +179,24 @@ export default function NewsAndAchievementsSection() {
 
           {/* Three cards with dividers */}
           <div className="flex flex-1 items-start gap-5 min-[1440px]:gap-[31px] ml-6 min-[1440px]:ml-8">
-            <DesktopCard image="/news-1.webp" text={articles[0].text} />
+            <div data-card="" className="flex-1 min-w-0">
+              <NewsCard image="/news-1.webp" text={articles[0].text} />
+            </div>
             <div className="w-px self-stretch bg-[#cccccc]" />
-            <DesktopCard image="/news-2.webp" text={articles[1].text} offsetTop />
+            <div data-card="" className="flex-1 min-w-0">
+              <NewsCard image="/news-2.webp" text={articles[1].text} offsetTop />
+            </div>
             <div className="w-px self-stretch bg-[#cccccc]" />
-            <DesktopCard image="/news-3.webp" text={articles[2].text} />
+            <div data-card="" className="flex-1 min-w-0">
+              <NewsCard image="/news-3.webp" text={articles[2].text} />
+            </div>
           </div>
 
         </div>
       </section>
 
       {/* ── Mobile only (<768px) ──────────────────────────────────────── */}
-      <section className="md:hidden bg-[#f3f3f3] w-full px-4 py-16">
+      <section ref={mobileRef} className="md:hidden bg-[#f3f3f3] w-full px-4 py-16">
         <div className="flex flex-col gap-8">
 
           <h2 className="font-inter font-light text-[32px] text-black tracking-[-2.56px] uppercase leading-[0.86]">
@@ -97,17 +207,10 @@ export default function NewsAndAchievementsSection() {
             {articles.map((article, index) => (
               <div
                 key={index}
+                data-mobile-card=""
                 className={`${index === articles.length - 1 ? "snap-end" : "snap-start"} shrink-0 w-[316px]`}
               >
-                <div className="flex flex-col gap-4 w-[300px]">
-                  <div className="w-[300px] aspect-[353/469] overflow-hidden">
-                    <img src={article.image} alt="" className="w-full h-full object-cover" />
-                  </div>
-                  <p className="font-inter font-normal text-[14px] text-[#1f1f1f] tracking-[-0.56px] leading-[1.3]">
-                    {article.text}
-                  </p>
-                  <ReadMoreLink />
-                </div>
+                <MobileNewsCard image={article.image} text={article.text} />
               </div>
             ))}
             <div className="shrink-0 w-4" />
