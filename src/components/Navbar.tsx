@@ -5,13 +5,14 @@ import gsap from "gsap";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import FillButton from "@/components/FillButton";
+import { useModal } from "@/components/LetsTalkModal";
 
 const navLinks = [
   { label: "About",    href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Projects", href: "/projects" },
-  { label: "News",     href: "#" },
-  { label: "Contact",  href: "#" },
+  { label: "News",     href: "/news" },
+  { label: "Contact",  href: "/contact" },
 ];
 const MENU_ORIGIN = "92% 5%";
 const NAV_H = 80;
@@ -49,6 +50,7 @@ function NavLink({ label, href, theme }: { label: string; href: string; theme: "
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const { openModal } = useModal();
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -212,8 +214,9 @@ export default function Navbar() {
             }`}
             fillColor="bg-white"
             hoverTextColor="black"
+            onClick={openModal}
           >
-            Let&apos;s talk
+            Let&apos;s Talk
           </FillButton>
         </div>
 
